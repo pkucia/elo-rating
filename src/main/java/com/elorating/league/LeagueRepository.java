@@ -1,6 +1,5 @@
-package com.elorating.repository;
+package com.elorating.league;
 
-import com.elorating.model.League;
 import com.elorating.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

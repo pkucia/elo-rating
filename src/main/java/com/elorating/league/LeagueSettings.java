@@ -1,4 +1,4 @@
-package com.elorating.model;
+package com.elorating.league;
 
 public class LeagueSettings {
     private int maxScore;

@@ -1,5 +1,6 @@
 package com.elorating.service.email;
 
+import com.elorating.league.League;
 import com.elorating.model.*;
 import com.elorating.service.BaseServiceTest;
 import com.elorating.utils.MatchTestUtils;

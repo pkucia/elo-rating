@@ -1,7 +1,7 @@
-package com.elorating.controller;
+package com.elorating.web;
 
 import com.elorating.model.EmailsNotifications;
-import com.elorating.model.League;
+import com.elorating.league.League;
 import com.elorating.model.Player;
 import com.elorating.model.User;
 import com.elorating.service.PlayerService;
@@ -75,7 +75,7 @@ public class UserControllerTest extends BaseControllerTest {
                 .contentType(contentType))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.leagues", Matchers.hasSize(2)));
-        League updatedLeague = leagueService.getById(leagueToAssign.getId()).get();
+        League updatedLeague = leagueService.get(leagueToAssign.getId()).get();
         Assert.assertTrue(updatedLeague.getUsers().size() == 1);
     }
 
@@ -111,7 +111,7 @@ public class UserControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.id", is(userToInvite.getId())))
                 .andExpect(jsonPath("$.email", is(userToInvite.getEmail())))
                 .andExpect(jsonPath("$.leagues[0].id", is(league.getId())));
-        League updatedLeague = leagueService.getById(league.getId()).get();
+        League updatedLeague = leagueService.get(league.getId()).get();
         Assert.assertEquals(updatedLeague.getUsers().size(), 1);
     }
 
@@ -155,7 +155,7 @@ public class UserControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.email", is(userToInvite.getEmail())))
                 .andExpect(jsonPath("$.leagues[0].id", is(league.getId())))
                 .andExpect(jsonPath("$.players[0].id", is(player.getId())));
-        League updatedLeague = leagueService.getById(league.getId()).get();
+        League updatedLeague = leagueService.get(league.getId()).get();
         Player updatedPlayer = playerService.getById(player.getId()).get();
         Assert.assertEquals(updatedLeague.getUsers().size(), 1);
         Assert.assertEquals(updatedPlayer.getUser().getId(), userToInvite.getId());

@@ -1,6 +1,6 @@
 package com.elorating.service.email;
 
-import com.elorating.model.League;
+import com.elorating.league.League;
 import com.elorating.service.BaseServiceTest;
 import com.elorating.service.EmailService;
 import org.junit.Ignore;

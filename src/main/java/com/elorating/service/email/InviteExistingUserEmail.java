@@ -1,6 +1,6 @@
 package com.elorating.service.email;
 
-import com.elorating.model.League;
+import com.elorating.league.League;
 import org.thymeleaf.context.Context;
 
 public class InviteExistingUserEmail extends EmailBuilder {

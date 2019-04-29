@@ -1,5 +1,6 @@
 package com.elorating.model;
 
+import com.elorating.league.League;
 import com.elorating.utils.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

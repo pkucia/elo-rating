@@ -1,6 +1,6 @@
 package com.elorating.utils;
 
-import com.elorating.model.League;
+import com.elorating.league.League;
 import com.elorating.model.Match;
 import com.elorating.model.Player;
 

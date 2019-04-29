@@ -1,6 +1,6 @@
-package com.elorating.controller;
+package com.elorating.web;
 
-import com.elorating.model.League;
+import com.elorating.league.League;
 import com.elorating.model.Player;
 import com.elorating.service.MatchService;
 import com.elorating.service.PlayerService;

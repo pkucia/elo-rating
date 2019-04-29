@@ -1,31 +1,32 @@
-package com.elorating.service;
+package com.elorating.league;
 
-import com.elorating.model.League;
-import com.elorating.model.LeagueSettings;
 import com.elorating.model.User;
-import com.elorating.repository.LeagueRepository;
 import com.elorating.repository.MatchRepository;
 import com.elorating.repository.PlayerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class LeagueService implements RepositoryService<League> {
+class LeagueServiceImpl implements LeagueService {
 
-    @Resource
     private LeagueRepository leagueRepository;
-
-    @Resource
     private MatchRepository matchRepository;
-
-    @Resource
     private PlayerRepository playerRepository;
 
+    @Autowired
+    public LeagueServiceImpl(LeagueRepository leagueRepository,
+                             MatchRepository matchRepository,
+                             PlayerRepository playerRepository) {
+        this.leagueRepository = leagueRepository;
+        this.matchRepository = matchRepository;
+        this.playerRepository = playerRepository;
+    }
+
     @Override
-    public Optional<League> getById(String id) {
+    public Optional<League> get(String id) {
         return leagueRepository.findById(id);
     }
 
@@ -45,7 +46,7 @@ public class LeagueService implements RepositoryService<League> {
     }
 
     @Override
-    public void deleteById(String id)
+    public void delete(String id)
     {
         matchRepository.deleteByLeagueId(id);
         playerRepository.deleteByLeagueId(id);
@@ -57,10 +58,12 @@ public class LeagueService implements RepositoryService<League> {
         leagueRepository.deleteAll();
     }
 
+    @Override
     public List<League> findByName(String leagueName) {
         return leagueRepository.findByNameLikeIgnoreCase(leagueName);
     }
 
+    @Override
     public League update(League league) {
         return leagueRepository.findById(league.getId()).map(dbLeague -> {
             dbLeague.setName(league.getName());
@@ -70,15 +73,18 @@ public class LeagueService implements RepositoryService<League> {
         }).orElse(null);
     }
 
+    @Override
     public List<League> findUnassignedLeagues() {
         return leagueRepository.findByUsersNull();
     }
 
-    public League findLeagueByIdAndUser(String leagueId, User user) {
+    @Override
+    public League findByIdAndUser(String leagueId, User user) {
         return leagueRepository.findByIdAndUsers(leagueId, user);
     }
 
-    public LeagueSettings getLeagueSettings(String id) {
+    @Override
+    public LeagueSettings getSettings(String id) {
         return leagueRepository.findById(id)
                 .map(League::getSettings)
                 .orElse(null);

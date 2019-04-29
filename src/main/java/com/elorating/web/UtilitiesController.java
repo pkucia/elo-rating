@@ -1,4 +1,4 @@
-package com.elorating.controller;
+package com.elorating.web;
 
 import com.elorating.utils.DateUtils;
 import io.swagger.annotations.Api;
@@ -17,7 +17,7 @@ import java.util.TimeZone;
 
 @RestController
 @RequestMapping("/api")
-@Api(value = "common", description = "Utilities controller")
+@Api(value = "common", description = "Utilities web")
 public class UtilitiesController {
 
     private static final Logger logger = LoggerFactory.getLogger(UtilitiesController.class);

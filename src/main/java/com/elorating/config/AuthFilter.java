@@ -1,8 +1,8 @@
 package com.elorating.config;
 
-import com.elorating.model.League;
+import com.elorating.league.League;
 import com.elorating.model.User;
-import com.elorating.repository.LeagueRepository;
+import com.elorating.league.LeagueRepository;
 import com.elorating.repository.UserRepository;
 import com.elorating.service.GoogleAuthService;
 import org.springframework.beans.factory.annotation.Autowired;

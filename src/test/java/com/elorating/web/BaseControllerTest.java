@@ -1,8 +1,8 @@
-package com.elorating.controller;
+package com.elorating.web;
 
 import com.elorating.CoreApplication;
-import com.elorating.model.League;
-import com.elorating.service.LeagueService;
+import com.elorating.league.League;
+import com.elorating.league.LeagueService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

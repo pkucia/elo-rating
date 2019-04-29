@@ -1,4 +1,4 @@
-package com.elorating.controller;
+package com.elorating.web;
 
 import com.elorating.model.Feedback;
 import org.junit.After;

@@ -1,5 +1,6 @@
-package com.elorating.model;
+package com.elorating.league;
 
+import com.elorating.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
