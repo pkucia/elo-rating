@@ -2,9 +2,9 @@ package com.elorating.web;
 
 import com.elorating.league.League;
 import com.elorating.model.Match;
-import com.elorating.model.Player;
+import com.elorating.player.Player;
+import com.elorating.player.PlayerService;
 import com.elorating.service.MatchService;
-import com.elorating.service.PlayerService;
 import com.elorating.utils.MatchTestUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.hamcrest.Matchers;
@@ -18,7 +18,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -112,8 +114,8 @@ public class MatchControllerTest extends BaseControllerTest {
             .andExpect(jsonPath("$.ratings['" + playerOne.getId() + "']", is(1024)))
             .andExpect(jsonPath("$.ratings['" + playerTwo.getId() + "']", is(976)))
             .andExpect(jsonPath("$.date").exists());
-        playerOne = playerService.getById(playerOne.getId()).get();
-        playerTwo = playerService.getById(playerTwo.getId()).get();
+        playerOne = playerService.get(playerOne.getId()).get();
+        playerTwo = playerService.get(playerTwo.getId()).get();
         Assert.assertEquals(1024, playerOne.getRating());
         Assert.assertEquals(976, playerTwo.getRating());
         Assert.assertEquals(1, playerOne.getStatistics().getWon());
@@ -133,8 +135,8 @@ public class MatchControllerTest extends BaseControllerTest {
                 .content(matchJson)
                 .contentType(contentType))
                 .andExpect(status().isOk());
-        playerOne = playerService.getById(playerOne.getId()).get();
-        playerTwo = playerService.getById(playerTwo.getId()).get();
+        playerOne = playerService.get(playerOne.getId()).get();
+        playerTwo = playerService.get(playerTwo.getId()).get();
         Assert.assertEquals(1000, playerOne.getRating());
         Assert.assertEquals(1000, playerTwo.getRating());
         Assert.assertEquals(0, playerOne.getStatistics().getWon());
@@ -216,13 +218,13 @@ public class MatchControllerTest extends BaseControllerTest {
                 .contentType(contentType))
                 .andExpect(status().isOk());
         Assert.assertFalse(matchService.getById(matchId).isPresent());
-        playerOne = playerService.getById(playerOne.getId()).get();
+        playerOne = playerService.get(playerOne.getId()).get();
         Assert.assertEquals(1200, playerOne.getRating());
-        playerTwo = playerService.getById(playerTwo.getId()).get();
+        playerTwo = playerService.get(playerTwo.getId()).get();
         Assert.assertEquals(0, playerOne.getStatistics().getWon());
         Assert.assertEquals(0, playerOne.getStatistics().getLost());
         Assert.assertEquals(0, playerOne.getStatistics().getDraw());
-        playerTwo = playerService.getById(playerTwo.getId()).get();
+        playerTwo = playerService.get(playerTwo.getId()).get();
         Assert.assertEquals(800, playerTwo.getRating());
         Assert.assertEquals(0, playerTwo.getStatistics().getWon());
         Assert.assertEquals(0, playerTwo.getStatistics().getLost());

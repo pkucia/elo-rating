@@ -1,61 +1,72 @@
-package com.elorating.service;
+package com.elorating.player;
 
 import com.elorating.algorithm.Elo;
 import com.elorating.model.Match;
-import com.elorating.model.Player;
 import com.elorating.repository.MatchRepository;
-import com.elorating.repository.PlayerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
-public class PlayerMatchesService {
+class PlayerMatchesServiceImpl implements PlayerMatchesService {
 
-    @Resource
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
+    private final MatchRepository matchRepository;
 
-    @Resource
-    private MatchRepository matchRepository;
+    @Autowired
+    public PlayerMatchesServiceImpl(PlayerRepository playerRepository,
+                                    MatchRepository matchRepository) {
+        this.playerRepository = playerRepository;
+        this.matchRepository = matchRepository;
+    }
 
+    @Override
     public List<Match> findByPlayerId(String playerId, Sort sort) {
         return matchRepository.findByPlayerId(playerId, sort);
     }
 
+    @Override
     public List<Match> findScheduledByPlayerId(String playerId, Sort sort) {
         return matchRepository.findScheduledByPlayerId(playerId, sort);
     }
 
+    @Override
     public Page<Match> findCompletedByPlayerId(String playerId, PageRequest pageRequest) {
         return matchRepository.findCompletedByPlayerId(playerId, pageRequest);
     }
 
+    @Override
     public List<Match> findCompletedByPlayerId(String playerId, Sort sort) {
         return matchRepository.findCompletedByPlayerId(playerId, sort);
     }
 
+    @Override
     public List<Match> findCompletedByPlayerIds(String playerId, String opponentId, Sort sort) {
         return matchRepository.findCompletedByPlayerIds(playerId, opponentId, sort);
     }
 
+    @Override
     public Page<Match> findCompletedByPlayerIds(String playerId, String opponentId, PageRequest pageRequest) {
         return matchRepository.findCompletedByPlayerIds(playerId, opponentId, pageRequest);
     }
 
+    @Override
     public List<Match> findCompletedByPlayerIdAndDate(String playerId, Date from, Sort sort) {
         return matchRepository.findCompletedByPlayerIdAndDate(playerId, from, sort);
     }
 
+    @Override
     public List<Match> findCompletedByPlayerIdAndDate(String playerId, Date from, Date to, Sort sort) {
         return matchRepository.findCompletedByPlayerIdAndDate(playerId, from, to, sort);
     }
 
+    @Override
     public List<Match> getMatchForecast(String playerId, String opponentId) {
         Player player = playerRepository.findById(playerId).orElseGet(Player::new);
         Player opponent = playerRepository.findById(opponentId).orElseGet(Player::new);

@@ -1,7 +1,7 @@
 package com.elorating.algorithm;
 
 import com.elorating.model.Match;
-import com.elorating.model.Player;
+import com.elorating.player.Player;
 
 public class Elo {
     private Match match;

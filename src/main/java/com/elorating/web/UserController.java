@@ -2,7 +2,7 @@ package com.elorating.web;
 
 import com.elorating.model.EmailsNotifications;
 import com.elorating.model.Invitation;
-import com.elorating.model.Player;
+import com.elorating.player.Player;
 import com.elorating.model.User;
 import com.elorating.service.GoogleAuthService;
 import com.elorating.service.UserService;

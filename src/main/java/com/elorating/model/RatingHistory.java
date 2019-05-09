@@ -1,5 +1,7 @@
 package com.elorating.model;
 
+import com.elorating.player.Player;
+
 import java.util.Date;
 
 public class RatingHistory {

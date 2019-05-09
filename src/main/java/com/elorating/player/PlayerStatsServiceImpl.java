@@ -1,29 +1,32 @@
-package com.elorating.service;
+package com.elorating.player;
 
-import com.elorating.model.*;
+import com.elorating.model.Match;
+import com.elorating.model.OpponentStats;
+import com.elorating.model.RatingHistory;
 import com.elorating.repository.MatchRepository;
-import com.elorating.repository.PlayerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by pokor on 10.06.2017.
- */
 @Service
-public class PlayerStatsService {
+class PlayerStatsServiceImpl implements PlayerStatsService {
 
-    @Resource
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
+    private final MatchRepository matchRepository;
 
-    @Resource
-    private MatchRepository matchRepository;
+    @Autowired
+    public PlayerStatsServiceImpl(PlayerRepository playerRepository,
+                                  MatchRepository matchRepository) {
+        this.playerRepository = playerRepository;
+        this.matchRepository = matchRepository;
+    }
 
+    @Override
     public OpponentStats getOpponentStats(String playerId, String opponentId) {
         Sort sortByDate = new Sort(Sort.Direction.DESC, "date");
         Optional<Player> player = playerRepository.findById(playerId);
@@ -37,6 +40,7 @@ public class PlayerStatsService {
         return null;
     }
 
+    @Override
     public List<OpponentStats> getOpponentsStats(String playerId) {
         return playerRepository.findById(playerId).map(player -> {
             List<Player> opponents = playerRepository.findByIdNotAndLeagueId(playerId, player.getLeague().getId());
@@ -48,16 +52,19 @@ public class PlayerStatsService {
         }).orElseGet(ArrayList::new);
     }
 
+    @Override
     public List<RatingHistory> getRatingHistory(String playerId, Date from, Date to, Sort sort) {
         List<Match> matches = matchRepository.findCompletedByPlayerIdAndDate(playerId, from, to, sort);
         return buildRatingHistory(matches, playerId);
     }
 
+    @Override
     public List<RatingHistory> getRatingHistory(String playerId, Date from, Sort sort) {
         List<Match> matches = matchRepository.findCompletedByPlayerIdAndDate(playerId, from, sort);
         return buildRatingHistory(matches, playerId);
     }
 
+    @Override
     public List<RatingHistory> getRatingHistory(String playerId, Sort sort) {
         List<Match> matches = matchRepository.findCompletedByPlayerId(playerId, sort);
         return buildRatingHistory(matches, playerId);
@@ -71,6 +78,7 @@ public class PlayerStatsService {
         return history;
     }
 
+    @Override
     public PlayerMatchesStats getPlayerMatchesStats(String playerId) {
         PlayerMatchesStats statistics = new PlayerMatchesStats();
         List<Match> matches = matchRepository.findCompletedByPlayerId(playerId);

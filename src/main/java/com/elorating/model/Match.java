@@ -1,6 +1,7 @@
 package com.elorating.model;
 
 import com.elorating.league.League;
+import com.elorating.player.Player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;

@@ -1,7 +1,7 @@
 package com.elorating.web;
 
 import com.elorating.model.Match;
-import com.elorating.service.PlayerMatchesService;
+import com.elorating.player.PlayerMatchesService;
 import com.elorating.utils.SortUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

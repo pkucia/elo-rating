@@ -1,13 +1,17 @@
 package com.elorating.web;
 
-import com.elorating.model.EmailsNotifications;
 import com.elorating.league.League;
-import com.elorating.model.Player;
+import com.elorating.model.EmailsNotifications;
 import com.elorating.model.User;
-import com.elorating.service.PlayerService;
+import com.elorating.player.Player;
+import com.elorating.player.PlayerService;
 import com.elorating.service.UserService;
 import org.hamcrest.Matchers;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
@@ -156,7 +160,7 @@ public class UserControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.leagues[0].id", is(league.getId())))
                 .andExpect(jsonPath("$.players[0].id", is(player.getId())));
         League updatedLeague = leagueService.get(league.getId()).get();
-        Player updatedPlayer = playerService.getById(player.getId()).get();
+        Player updatedPlayer = playerService.get(player.getId()).get();
         Assert.assertEquals(updatedLeague.getUsers().size(), 1);
         Assert.assertEquals(updatedPlayer.getUser().getId(), userToInvite.getId());
     }

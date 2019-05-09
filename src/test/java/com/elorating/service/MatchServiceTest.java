@@ -2,10 +2,10 @@ package com.elorating.service;
 
 import com.elorating.league.League;
 import com.elorating.model.Match;
-import com.elorating.model.Player;
+import com.elorating.player.Player;
 import com.elorating.league.LeagueRepository;
 import com.elorating.repository.MatchRepository;
-import com.elorating.repository.PlayerRepository;
+import com.elorating.player.PlayerRepository;
 import com.elorating.utils.DateUtils;
 import com.elorating.utils.MatchTestUtils;
 import com.elorating.utils.PlayerTestUtils;

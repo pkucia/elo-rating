@@ -1,5 +1,7 @@
 package com.elorating.model;
 
+import com.elorating.player.Player;
+import com.elorating.player.PlayerStats;
 import io.swagger.annotations.ApiModel;
 
 import java.util.List;

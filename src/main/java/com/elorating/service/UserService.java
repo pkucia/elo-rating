@@ -1,10 +1,10 @@
 package com.elorating.service;
 
 import com.elorating.league.League;
-import com.elorating.model.Player;
+import com.elorating.player.Player;
 import com.elorating.model.User;
 import com.elorating.league.LeagueRepository;
-import com.elorating.repository.PlayerRepository;
+import com.elorating.player.PlayerRepository;
 import com.elorating.repository.UserRepository;
 import com.elorating.service.email.*;
 import com.elorating.utils.DateUtils;

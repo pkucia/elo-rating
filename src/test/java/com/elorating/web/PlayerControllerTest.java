@@ -1,9 +1,9 @@
 package com.elorating.web;
 
 import com.elorating.league.League;
-import com.elorating.model.Player;
+import com.elorating.player.Player;
+import com.elorating.player.PlayerService;
 import com.elorating.service.MatchService;
-import com.elorating.service.PlayerService;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;
@@ -12,7 +12,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -128,7 +131,7 @@ public class PlayerControllerTest extends BaseControllerTest {
         mockMvc.perform(delete(url)
                 .contentType(contentType))
                 .andExpect(status().isOk());
-        Assert.assertFalse(playerService.getById(player.getId()).isPresent());
+        Assert.assertFalse(playerService.get(player.getId()).isPresent());
     }
 
     @Test

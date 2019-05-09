@@ -1,4 +1,4 @@
-package com.elorating.model;
+package com.elorating.player;
 
 import java.util.Date;
 

@@ -2,9 +2,9 @@ package com.elorating.web;
 
 import com.elorating.league.League;
 import com.elorating.model.Match;
-import com.elorating.model.Player;
+import com.elorating.player.Player;
+import com.elorating.player.PlayerService;
 import com.elorating.service.MatchService;
-import com.elorating.service.PlayerService;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;

@@ -1,9 +1,9 @@
 package com.elorating.web;
 
 import com.elorating.model.OpponentStats;
-import com.elorating.model.PlayerMatchesStats;
+import com.elorating.player.PlayerMatchesStats;
 import com.elorating.model.RatingHistory;
-import com.elorating.service.PlayerStatsService;
+import com.elorating.player.PlayerStatsService;
 import com.elorating.utils.SortUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

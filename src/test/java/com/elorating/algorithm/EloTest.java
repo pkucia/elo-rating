@@ -1,7 +1,7 @@
 package com.elorating.algorithm;
 
 import com.elorating.model.Match;
-import com.elorating.model.Player;
+import com.elorating.player.Player;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

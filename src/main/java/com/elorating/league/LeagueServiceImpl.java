@@ -2,7 +2,7 @@ package com.elorating.league;
 
 import com.elorating.model.User;
 import com.elorating.repository.MatchRepository;
-import com.elorating.repository.PlayerRepository;
+import com.elorating.player.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -2,9 +2,9 @@ package com.elorating.web;
 
 import com.elorating.league.League;
 import com.elorating.model.Match;
-import com.elorating.model.Player;
+import com.elorating.player.Player;
+import com.elorating.player.PlayerService;
 import com.elorating.service.MatchService;
-import com.elorating.service.PlayerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class PlayerController {
     @RequestMapping(value = "/players/{id}", method = RequestMethod.GET)
     @ApiOperation(value = "Get player", notes = "Return player by player id")
     public ResponseEntity<Player> getById(@PathVariable String id) {
-        Player player = playerService.getById(id).orElse(null);
+        Player player = playerService.get(id).orElse(null);
         return new ResponseEntity<>(player, HttpStatus.OK);
     }
 
@@ -77,7 +77,7 @@ public class PlayerController {
     @RequestMapping(value = "/leagues/{leagueId}/players/{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Edit player", notes = "Edit player by player id")
     public ResponseEntity<Player> edit(@PathVariable String id, @RequestBody Player player) {
-        playerService.getById(id).ifPresent(currentPlayer -> {
+        playerService.get(id).ifPresent(currentPlayer -> {
             player.setLeague(currentPlayer.getLeague());
             playerService.save(player);
         });
@@ -89,7 +89,7 @@ public class PlayerController {
     @ApiOperation(value = "Remove player", notes = "Remove player by player id")
     public ResponseEntity<Player> delete(@PathVariable String id) {
         removePlayerFromMatches(id);
-        playerService.deleteById(id);
+        playerService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
