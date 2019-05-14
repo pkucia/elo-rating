@@ -1,5 +1,6 @@
 package com.elorating.player;
 
+import com.elorating.common.AbstractCrudService;
 import com.elorating.match.Match;
 import com.elorating.match.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,61 +15,30 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-class PlayerServiceImpl implements PlayerService {
+class PlayerServiceImpl extends AbstractCrudService<Player, PlayerRepository> implements PlayerService {
 
-    private final PlayerRepository playerRepository;
     private final MatchRepository matchRepository;
 
     @Autowired
     public PlayerServiceImpl(PlayerRepository playerRepository,
                              MatchRepository matchRepository) {
-        this.playerRepository = playerRepository;
+        super(playerRepository);
         this.matchRepository = matchRepository;
     }
 
     @Override
-    public Optional<Player> get(String id) {
-        return playerRepository.findById(id);
-    }
-
-    @Override
-    public List<Player> getAll() {
-        return playerRepository.findAll();
-    }
-
-    @Override
-    public Player save(Player player) {
-        return playerRepository.save(player);
-    }
-
-    @Override
-    public List<Player> save(Iterable<Player> players) {
-        return playerRepository.saveAll(players);
-    }
-
-    @Override
-    public void delete(String id) {
-        playerRepository.deleteById(id);
-    }
-
-    @Override
-    public void deleteAll() {
-        playerRepository.deleteAll();
-    }
-
-    @Override
     public List<Player> findByLeagueId(String id) {
-        return playerRepository.findByLeagueId(id);
+        return repository.findByLeagueId(id);
     }
 
     @Override
     public Long getActivePlayersCountByLeague(String leaugeId) {
-        return playerRepository.countByLeagueIdAndActiveIsTrue(leaugeId);
+        return repository.countByLeagueIdAndActiveIsTrue(leaugeId);
     }
 
     @Override
     public List<Player> getRanking(String id, Sort sort) {
-        return playerRepository.getRanking(id, sort);
+        return repository.getRanking(id, sort);
     }
 
     @Override
@@ -76,9 +46,9 @@ class PlayerServiceImpl implements PlayerService {
         if (username.length() == 2) {
             String regex = buildInitialsRegex(username);
             System.out.println(regex);
-            return playerRepository.findByLeagueIdAndUsernameRegex(leagueId, regex);
+            return repository.findByLeagueIdAndUsernameRegex(leagueId, regex);
         } else if (username.length() > 2) {
-            return playerRepository.findByLeagueIdAndUsernameLikeIgnoreCase(leagueId, username);
+            return repository.findByLeagueIdAndUsernameLikeIgnoreCase(leagueId, username);
         }
         return new ArrayList<>();
     }
@@ -87,9 +57,9 @@ class PlayerServiceImpl implements PlayerService {
     public List<Player> findActiveByLeagueIdAndUsername(String leagueId, String username) {
         if (username.length() == 2) {
             String regex = buildInitialsRegex(username);
-            return playerRepository.findByLeagueIdAndActiveIsTrueAndUsernameRegex(leagueId, regex);
+            return repository.findByLeagueIdAndActiveIsTrueAndUsernameRegex(leagueId, regex);
         } else if (username.length() > 2) {
-            return playerRepository.findByLeagueIdAndActiveIsTrueAndUsernameLikeIgnoreCase(leagueId, username);
+            return repository.findByLeagueIdAndActiveIsTrueAndUsernameLikeIgnoreCase(leagueId, username);
         }
         return new ArrayList<>();
     }
@@ -107,13 +77,13 @@ class PlayerServiceImpl implements PlayerService {
             playerOne.restoreRating(match.getRatingDelta(), match.isDraw());
             Date playerLastMatchDate = getPlayerLastMatchDate(playerOne.getId());
             playerOne.getStatistics().setLastMatchDate(playerLastMatchDate);
-            playerRepository.save(playerOne);
+            repository.save(playerOne);
         });
         get(match.getPlayerTwo().getId()).ifPresent(playerTwo -> {
             playerTwo.restoreRating(-match.getRatingDelta(), match.isDraw());
             Date playerLastMatchDate = getPlayerLastMatchDate(playerTwo.getId());
             playerTwo.getStatistics().setLastMatchDate(playerLastMatchDate);
-            playerRepository.save(playerTwo);
+            repository.save(playerTwo);
         });
     }
 

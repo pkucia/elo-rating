@@ -1,5 +1,6 @@
 package com.elorating.user;
 
+import com.elorating.common.AbstractCrudService;
 import com.elorating.league.League;
 import com.elorating.league.LeagueRepository;
 import com.elorating.player.Player;
@@ -20,65 +21,34 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 @Service
-class UserServiceImpl implements UserService {
+class UserServiceImpl extends AbstractCrudService<User, UserRepository> implements UserService {
 
     private final LeagueRepository leagueRepository;
-    private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
     private final EmailService emailService;
 
     @Autowired
     public UserServiceImpl(LeagueRepository leagueRepository, UserRepository userRepository,
                            PlayerRepository playerRepository, EmailService emailService) {
+        super(userRepository);
         this.leagueRepository = leagueRepository;
-        this.userRepository = userRepository;
         this.playerRepository = playerRepository;
         this.emailService = emailService;
     }
 
     @Override
-    public Optional<User> get(String id) {
-        return userRepository.findById(id);
-    }
-
-    @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public User save(User user) {
-        return userRepository.save(user);
-    }
-
-    @Override
-    public List<User> save(Iterable<User> users) {
-        return userRepository.saveAll(users);
-    }
-
-    @Override
-    public void delete(String id) {
-        userRepository.deleteById(id);
-    }
-
-    @Override
-    public void deleteAll() {
-        userRepository.deleteAll();
-    }
-
-    @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return repository.findByEmail(email);
     }
 
     @Override
     public User findByInvitationToken(String token) {
-        return userRepository.findByInvitationToken(token);
+        return repository.findByInvitationToken(token);
     }
 
     @Override
     public List<User> findByNameLikeIgnoreCase(String name) {
-        return userRepository.findByNameLikeIgnoreCase(name);
+        return repository.findByNameLikeIgnoreCase(name);
     }
 
     @Override
@@ -111,12 +81,12 @@ class UserServiceImpl implements UserService {
 
     @Override
     public User checkForPendingInvitation(User userFromGoogle) {
-        User user = userRepository.findByEmailAndInvitationTokenExists(userFromGoogle.getEmail());
+        User user = repository.findByEmailAndInvitationTokenExists(userFromGoogle.getEmail());
         if (user != null) {
             user.clearInvitationToken();
             user.update(userFromGoogle);
             user.setGoogleId(userFromGoogle.getGoogleId());
-            userRepository.save(user);
+            repository.save(user);
             user = connectUserToLeagueAndPlayer(user);
         }
         return user;
@@ -124,26 +94,26 @@ class UserServiceImpl implements UserService {
 
     @Override
     public User saveOrUpdateUser(User userFromGoogle) {
-        User savedUser = userRepository.findByGoogleId(userFromGoogle.getGoogleId());
+        User savedUser = repository.findByGoogleId(userFromGoogle.getGoogleId());
         if (savedUser != null) {
             savedUser.update(userFromGoogle);
-            savedUser = userRepository.save(savedUser);
+            savedUser = repository.save(savedUser);
         } else {
-            savedUser = userRepository.save(userFromGoogle);
+            savedUser = repository.save(userFromGoogle);
         }
         return savedUser;
     }
 
     @Override
     public User saveOrUpdateUser(User userFromGoogle, TimeZone timeZone) {
-        User savedUser = userRepository.findByGoogleId(userFromGoogle.getGoogleId());
+        User savedUser = repository.findByGoogleId(userFromGoogle.getGoogleId());
         if (savedUser != null) {
             savedUser.update(userFromGoogle);
             savedUser = setUserTimezone(savedUser, timeZone);
-            savedUser = userRepository.save(savedUser);
+            savedUser = repository.save(savedUser);
         } else {
             userFromGoogle = setUserTimezone(userFromGoogle, timeZone);
-            savedUser = userRepository.save(userFromGoogle);
+            savedUser = repository.save(userFromGoogle);
         }
         return savedUser;
     }
@@ -152,7 +122,7 @@ class UserServiceImpl implements UserService {
     public User inviteNewUser(String currentUser, User userToInvite, String originUrl) {
         String token = UUID.randomUUID().toString();
         userToInvite.setInvitationToken(token);
-        userRepository.save(userToInvite);
+        repository.save(userToInvite);
         EmailBuilder emailBuilder = new InviteNewUserEmail(userToInvite.getEmail(), currentUser, originUrl, token);
         sendEmail(emailBuilder);
         userToInvite.clearInvitationToken();
@@ -162,7 +132,7 @@ class UserServiceImpl implements UserService {
     @Override
     public User inviteExistingUser(String currentUser, User requestUser, String originUrl) {
         League league = requestUser.getLeagues().get(0);
-        User userFromDB = userRepository.findByEmail(requestUser.getEmail());
+        User userFromDB = repository.findByEmail(requestUser.getEmail());
         User invitedUser = connectUserAndLeague(userFromDB.getId(), league.getId());
         if (requestUser.getPlayers() != null && requestUser.getPlayers().size() > 0)
             invitedUser = connectUserAndPlayer(userFromDB.getId(), requestUser.getPlayers().get(0).getId());
@@ -173,11 +143,11 @@ class UserServiceImpl implements UserService {
 
     @Override
     public User connectUserAndLeague(String userId, String leagueId) {
-        Optional<User> user = userRepository.findById(userId);
+        Optional<User> user = repository.findById(userId);
         Optional<League> league = leagueRepository.findById(leagueId);
         if (user.isPresent() && league.isPresent()) {
             user.get().addLeague(league.get());
-            userRepository.save(user.get());
+            repository.save(user.get());
             league.get().addUser(user.get());
             leagueRepository.save(league.get());
         }
@@ -186,11 +156,11 @@ class UserServiceImpl implements UserService {
 
     @Override
     public User connectUserAndPlayer(String userId, String playerId) {
-        Optional<User> user = userRepository.findById(userId);
+        Optional<User> user = repository.findById(userId);
         Optional<Player> player = playerRepository.findById(playerId);
         if (user.isPresent() && player.isPresent()) {
             user.get().addPlayer(player.get());
-            userRepository.save(user.get());
+            repository.save(user.get());
             player.get().setUser(user.get());
             playerRepository.save(player.get());
         }
@@ -199,7 +169,7 @@ class UserServiceImpl implements UserService {
 
     @Override
     public Player createPlayerForUser(String userId, String leagueId) {
-        return userRepository.findById(userId).map(currentUser -> {
+        return repository.findById(userId).map(currentUser -> {
             League league = new League(leagueId);
             Player player = new Player(currentUser.getName(), league);
             playerRepository.save(player);

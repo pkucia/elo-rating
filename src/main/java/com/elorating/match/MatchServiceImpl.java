@@ -1,9 +1,10 @@
 package com.elorating.match;
 
+import com.elorating.common.AbstractCrudService;
+import com.elorating.email.EmailGenerator;
+import com.elorating.email.EmailService;
 import com.elorating.player.Player;
 import com.elorating.player.PlayerRepository;
-import com.elorating.email.EmailService;
-import com.elorating.email.EmailGenerator;
 import com.elorating.web.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,9 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-class MatchServiceImpl implements MatchService {
+class MatchServiceImpl extends AbstractCrudService<Match, MatchRepository> implements MatchService {
 
-    private final MatchRepository matchRepository;
     private final PlayerRepository playerRepository;
     private final EmailService emailService;
     private final EmailGenerator emailGenerator;
@@ -27,40 +27,10 @@ class MatchServiceImpl implements MatchService {
     @Autowired
     public MatchServiceImpl(MatchRepository matchRepository, PlayerRepository playerRepository,
                             EmailService emailService, EmailGenerator emailGenerator) {
-        this.matchRepository = matchRepository;
+        super(matchRepository);
         this.playerRepository = playerRepository;
         this.emailService = emailService;
         this.emailGenerator = emailGenerator;
-    }
-
-    @Override
-    public Optional<Match> get(String id) {
-        return matchRepository.findById(id);
-    }
-
-    @Override
-    public List<Match> getAll() {
-        return matchRepository.findAll();
-    }
-
-    @Override
-    public Match save(Match match) {
-        return matchRepository.save(match);
-    }
-
-    @Override
-    public List<Match> save(Iterable<Match> matches) {
-        return matchRepository.saveAll(matches);
-    }
-
-    @Override
-    public void delete(String id) {
-        matchRepository.deleteById(id);
-    }
-
-    @Override
-    public void deleteAll() {
-        matchRepository.deleteAll();
     }
 
     @Override
@@ -86,10 +56,10 @@ class MatchServiceImpl implements MatchService {
 
     @Override
     public void deleteByIdWithNotification(String id, String originUrl) {
-        matchRepository.findById(id).ifPresent(matchToDelete -> {
-            matchRepository.deleteById(id);
+        repository.findById(id).ifPresent(matchToDelete -> {
+            repository.deleteById(id);
             matchToDelete = fulfillPlayersInfo(matchToDelete);
-            if (!matchRepository.findById(id).isPresent()) {
+            if (!repository.findById(id).isPresent()) {
                 this.emailService.sendEmails(emailGenerator.generateEmails(matchToDelete, emailGenerator.CANCEL_MATCH, originUrl));
             }
         });
@@ -118,33 +88,33 @@ class MatchServiceImpl implements MatchService {
 
     @Override
     public List<Match> findByLeagueId(String leagueId, Sort sortByDate) {
-        return matchRepository.findByLeagueId(leagueId, sortByDate);
+        return repository.findByLeagueId(leagueId, sortByDate);
     }
 
     @Override
     public Page<Match> findByLeagueIdAndCompletedIsTrue(String leagueId, Pageable pageRequest) {
-        return matchRepository.findByLeagueIdAndCompletedIsTrue(leagueId, pageRequest);
+        return repository.findByLeagueIdAndCompletedIsTrue(leagueId, pageRequest);
     }
 
     @Override
     public List<Match> findByLeagueIdAndCompletedIsFalse(String leagueId, Sort sortByDate) {
-        return matchRepository.findByLeagueIdAndCompletedIsFalse(leagueId, sortByDate);
+        return repository.findByLeagueIdAndCompletedIsFalse(leagueId, sortByDate);
     }
 
     @Override
     public List<Match> findByPlayerId(String playerId) {
-        return matchRepository.findByPlayerId(playerId);
+        return repository.findByPlayerId(playerId);
     }
 
     @Override
     public List<Match> findByCompletedIsFalse() {
-        return matchRepository.findByCompletedIsFalse();
+        return repository.findByCompletedIsFalse();
     }
 
     @Override
     public List<Match> rescheduleMatchesInLeague(String leagueId, int minutes,
                                                  Sort sort, String originUrl) {
-        List<Match> matchesInQueue = matchRepository.findByLeagueIdAndCompletedIsFalse(leagueId, sort);
+        List<Match> matchesInQueue = repository.findByLeagueIdAndCompletedIsFalse(leagueId, sort);
         List<Match> matchesToReschedule = new ArrayList<>(matchesInQueue.size());
 
         Date rescheduleTime = new Date();
@@ -163,13 +133,13 @@ class MatchServiceImpl implements MatchService {
         }
 
         saveAndNotify(matchesToReschedule, originUrl);
-        return matchRepository.findByLeagueIdAndCompletedIsFalse(leagueId, sort);
+        return repository.findByLeagueIdAndCompletedIsFalse(leagueId, sort);
     }
 
     @Override
     public boolean checkIfCompleted(Match match) {
         if (match.getId() != null && match.getId().length() > 0) {
-            Match matchToCheck = matchRepository.findByIdAndCompletedIsTrue(match.getId());
+            Match matchToCheck = repository.findByIdAndCompletedIsTrue(match.getId());
             return matchToCheck != null;
         }
         return false;
