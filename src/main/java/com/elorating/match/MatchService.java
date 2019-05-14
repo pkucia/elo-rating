@@ -1,20 +1,14 @@
 package com.elorating.match;
 
+import com.elorating.common.CrudService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface MatchService {
+public interface MatchService extends CrudService<Match> {
 
-    Optional<Match> get(String id);
-    List<Match> getAll();
-    Match save(Match match);
-    List<Match> save(Iterable<Match> matches);
-    void delete(String id);
-    void deleteAll();
     List<Match> saveAndNotify(List<Match> matches, String originUrl);
     Match saveAndNotify(Match match, String originUrl);
     void deleteByIdWithNotification(String id, String originUrl);

@@ -1,18 +1,13 @@
 package com.elorating.user;
 
+import com.elorating.common.CrudService;
 import com.elorating.player.Player;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.TimeZone;
 
-public interface UserService {
-    Optional<User> get(String id);
-    List<User> getAll();
-    User save(User user);
-    List<User> save(Iterable<User> users);
-    void delete(String id);
-    void deleteAll();
+public interface UserService extends CrudService<User> {
+
     User findByEmail(String email);
     User findByInvitationToken(String token);
     List<User> findByNameLikeIgnoreCase(String name);
