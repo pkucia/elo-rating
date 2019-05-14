@@ -1,7 +1,5 @@
-package com.elorating.scheduler;
+package com.elorating.league;
 
-import com.elorating.league.League;
-import com.elorating.league.LeagueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

@@ -2,6 +2,7 @@ package com.elorating.scheduler;
 
 import com.elorating.CoreApplication;
 import com.elorating.league.League;
+import com.elorating.league.LeagueScheduler;
 import com.elorating.match.Match;
 import com.elorating.player.Player;
 import com.elorating.model.User;
