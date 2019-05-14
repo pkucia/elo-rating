@@ -1,9 +1,9 @@
 package com.elorating.web;
 
 import com.elorating.league.League;
-import com.elorating.model.Match;
+import com.elorating.match.Match;
 import com.elorating.player.PlayerService;
-import com.elorating.service.MatchService;
+import com.elorating.match.MatchService;
 import com.elorating.utils.SortUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +39,7 @@ public class MatchController {
     @RequestMapping(value = "/matches/{matchId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get match", notes = "Return match by match id")
     public ResponseEntity<Match> getMatch(@PathVariable("matchId") String matchId) {
-        Match match = matchService.getById(matchId).orElse(null);
+        Match match = matchService.get(matchId).orElse(null);
         return new ResponseEntity<>(match, HttpStatus.OK);
     }
 
@@ -119,8 +119,8 @@ public class MatchController {
     @ApiOperation(value = "Revert match",
                 notes = "Delete match and revert players rating to previous state")
     public ResponseEntity<Match> revert(@PathVariable String id) {
-        matchService.getById(id).ifPresent(match -> {
-            matchService.deleteById(match.getId());
+        matchService.get(id).ifPresent(match -> {
+            matchService.delete(match.getId());
             playerService.restorePlayers(match);
         });
         return new ResponseEntity<>(HttpStatus.OK);

@@ -1,4 +1,4 @@
-package com.elorating.model;
+package com.elorating.match;
 
 import com.elorating.league.League;
 import com.elorating.player.Player;

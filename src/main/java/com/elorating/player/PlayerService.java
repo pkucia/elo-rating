@@ -1,6 +1,6 @@
 package com.elorating.player;
 
-import com.elorating.model.Match;
+import com.elorating.match.Match;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;

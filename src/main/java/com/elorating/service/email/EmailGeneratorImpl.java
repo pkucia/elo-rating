@@ -1,6 +1,6 @@
 package com.elorating.service.email;
 
-import com.elorating.model.Match;
+import com.elorating.match.Match;
 import com.elorating.utils.DateUtils;
 import org.springframework.stereotype.Component;
 

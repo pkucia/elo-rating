@@ -1,10 +1,10 @@
 package com.elorating.web;
 
 import com.elorating.league.League;
-import com.elorating.model.Match;
+import com.elorating.match.Match;
 import com.elorating.player.Player;
 import com.elorating.player.PlayerService;
-import com.elorating.service.MatchService;
+import com.elorating.match.MatchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,5 @@
-package com.elorating.algorithm;
+package com.elorating.match;
 
-import com.elorating.model.Match;
 import com.elorating.player.Player;
 
 public class Elo {

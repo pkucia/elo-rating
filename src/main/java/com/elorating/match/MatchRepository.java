@@ -1,6 +1,5 @@
-package com.elorating.repository;
+package com.elorating.match;
 
-import com.elorating.model.Match;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

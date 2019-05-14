@@ -1,7 +1,7 @@
 package com.elorating.utils;
 
 import com.elorating.league.League;
-import com.elorating.model.Match;
+import com.elorating.match.Match;
 import com.elorating.player.Player;
 
 import java.util.ArrayList;

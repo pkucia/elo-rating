@@ -3,7 +3,7 @@ package com.elorating.web;
 import com.elorating.league.League;
 import com.elorating.player.Player;
 import com.elorating.player.PlayerService;
-import com.elorating.service.MatchService;
+import com.elorating.match.MatchService;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;

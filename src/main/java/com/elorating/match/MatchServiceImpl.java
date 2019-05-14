@@ -1,45 +1,40 @@
-package com.elorating.service;
+package com.elorating.match;
 
-import com.elorating.algorithm.Elo;
-import com.elorating.model.Match;
 import com.elorating.player.Player;
-import com.elorating.repository.MatchRepository;
 import com.elorating.player.PlayerRepository;
+import com.elorating.service.EmailService;
 import com.elorating.service.email.EmailGenerator;
 import com.elorating.utils.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class MatchService implements RepositoryService<Match> {
+class MatchServiceImpl implements MatchService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MatchService.class);
-
-    @Resource
-    private MatchRepository matchRepository;
-
-    @Resource
-    private PlayerRepository playerRepository;
+    private final MatchRepository matchRepository;
+    private final PlayerRepository playerRepository;
+    private final EmailService emailService;
+    private final EmailGenerator emailGenerator;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private EmailGenerator emailGenerator;
+    public MatchServiceImpl(MatchRepository matchRepository, PlayerRepository playerRepository,
+                            EmailService emailService, EmailGenerator emailGenerator) {
+        this.matchRepository = matchRepository;
+        this.playerRepository = playerRepository;
+        this.emailService = emailService;
+        this.emailGenerator = emailGenerator;
+    }
 
     @Override
-    public Optional<Match> getById(String id) {
+    public Optional<Match> get(String id) {
         return matchRepository.findById(id);
     }
 
@@ -59,7 +54,7 @@ public class MatchService implements RepositoryService<Match> {
     }
 
     @Override
-    public void deleteById(String id) {
+    public void delete(String id) {
         matchRepository.deleteById(id);
     }
 
@@ -68,6 +63,7 @@ public class MatchService implements RepositoryService<Match> {
         matchRepository.deleteAll();
     }
 
+    @Override
     public List<Match> saveAndNotify(List<Match> matches, String originUrl) {
         for (Match match : matches) {
             saveAndNotify(match, originUrl);
@@ -75,6 +71,7 @@ public class MatchService implements RepositoryService<Match> {
         return matches;
     }
 
+    @Override
     public Match saveAndNotify(Match match, String originUrl) {
         boolean update = checkIfMatchToUpdate(match);
         match = save(match);
@@ -87,6 +84,7 @@ public class MatchService implements RepositoryService<Match> {
         return match;
     }
 
+    @Override
     public void deleteByIdWithNotification(String id, String originUrl) {
         matchRepository.findById(id).ifPresent(matchToDelete -> {
             matchRepository.deleteById(id);
@@ -97,6 +95,7 @@ public class MatchService implements RepositoryService<Match> {
         });
     }
 
+    @Override
     public Match saveMatchWithPlayers(Match match) {
         Elo elo = new Elo(match);
         match.getPlayerOne().setRating(elo.getPlayerOneRating());
@@ -117,26 +116,32 @@ public class MatchService implements RepositoryService<Match> {
         });
     }
 
+    @Override
     public List<Match> findByLeagueId(String leagueId, Sort sortByDate) {
         return matchRepository.findByLeagueId(leagueId, sortByDate);
     }
 
+    @Override
     public Page<Match> findByLeagueIdAndCompletedIsTrue(String leagueId, Pageable pageRequest) {
         return matchRepository.findByLeagueIdAndCompletedIsTrue(leagueId, pageRequest);
     }
 
+    @Override
     public List<Match> findByLeagueIdAndCompletedIsFalse(String leagueId, Sort sortByDate) {
         return matchRepository.findByLeagueIdAndCompletedIsFalse(leagueId, sortByDate);
     }
 
+    @Override
     public List<Match> findByPlayerId(String playerId) {
         return matchRepository.findByPlayerId(playerId);
     }
 
+    @Override
     public List<Match> findByCompletedIsFalse() {
         return matchRepository.findByCompletedIsFalse();
     }
 
+    @Override
     public List<Match> rescheduleMatchesInLeague(String leagueId, int minutes,
                                                  Sort sort, String originUrl) {
         List<Match> matchesInQueue = matchRepository.findByLeagueIdAndCompletedIsFalse(leagueId, sort);
@@ -161,10 +166,11 @@ public class MatchService implements RepositoryService<Match> {
         return matchRepository.findByLeagueIdAndCompletedIsFalse(leagueId, sort);
     }
 
+    @Override
     public boolean checkIfCompleted(Match match) {
         if (match.getId() != null && match.getId().length() > 0) {
             Match matchToCheck = matchRepository.findByIdAndCompletedIsTrue(match.getId());
-            return (matchToCheck != null) ? true : false;
+            return matchToCheck != null;
         }
         return false;
     }

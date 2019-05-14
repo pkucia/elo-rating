@@ -1,8 +1,8 @@
 package com.elorating.player;
 
-import com.elorating.algorithm.Elo;
-import com.elorating.model.Match;
-import com.elorating.repository.MatchRepository;
+import com.elorating.match.Elo;
+import com.elorating.match.Match;
+import com.elorating.match.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

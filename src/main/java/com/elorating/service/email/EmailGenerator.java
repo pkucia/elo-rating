@@ -1,7 +1,7 @@
 package com.elorating.service.email;
 
 
-import com.elorating.model.Match;
+import com.elorating.match.Match;
 
 import java.util.Set;
 

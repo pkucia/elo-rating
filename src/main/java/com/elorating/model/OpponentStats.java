@@ -1,5 +1,6 @@
 package com.elorating.model;
 
+import com.elorating.match.Match;
 import com.elorating.player.Player;
 import com.elorating.player.PlayerStats;
 import io.swagger.annotations.ApiModel;

@@ -1,7 +1,5 @@
-package com.elorating.scheduler;
+package com.elorating.match;
 
-import com.elorating.model.Match;
-import com.elorating.service.MatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +16,19 @@ public class QueueListScheduler {
 
     private static final Logger logger = LoggerFactory.getLogger(QueueListScheduler.class);
 
+    private final MatchService matchService;
+
     @Autowired
-    private MatchService matchService;
+    public QueueListScheduler(MatchService matchService) {
+        this.matchService = matchService;
+    }
 
     @Scheduled(cron = "0 0 23 * * *")
     public void removeNotPlayedMatches() {
         logger.info("Remove not finished matches: start");
         List<Match> matches = matchService.findByCompletedIsFalse();
         for (Match match : matches) {
-            matchService.deleteById(match.getId());
+            matchService.delete(match.getId());
         }
         logger.info("Queues scheduler: stop");
     }

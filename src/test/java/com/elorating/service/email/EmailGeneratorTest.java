@@ -1,6 +1,7 @@
 package com.elorating.service.email;
 
 import com.elorating.league.League;
+import com.elorating.match.Match;
 import com.elorating.model.*;
 import com.elorating.player.Player;
 import com.elorating.service.BaseServiceTest;

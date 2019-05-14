@@ -1,10 +1,10 @@
 package com.elorating.web;
 
 import com.elorating.league.League;
-import com.elorating.model.Match;
+import com.elorating.match.Match;
 import com.elorating.player.Player;
 import com.elorating.player.PlayerService;
-import com.elorating.service.MatchService;
+import com.elorating.match.MatchService;
 import com.elorating.utils.MatchTestUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.hamcrest.Matchers;
@@ -172,7 +172,7 @@ public class MatchControllerTest extends BaseControllerTest {
         mockMvc.perform(delete(url)
                 .contentType(contentType))
                 .andExpect(status().isOk());
-        Assert.assertFalse(matchService.getById(match.getId()).isPresent());
+        Assert.assertFalse(matchService.get(match.getId()).isPresent());
     }
 
     @Test
@@ -217,7 +217,7 @@ public class MatchControllerTest extends BaseControllerTest {
         mockMvc.perform(post(revertUrl)
                 .contentType(contentType))
                 .andExpect(status().isOk());
-        Assert.assertFalse(matchService.getById(matchId).isPresent());
+        Assert.assertFalse(matchService.get(matchId).isPresent());
         playerOne = playerService.get(playerOne.getId()).get();
         Assert.assertEquals(1200, playerOne.getRating());
         playerTwo = playerService.get(playerTwo.getId()).get();
