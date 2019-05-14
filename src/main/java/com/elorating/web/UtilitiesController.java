@@ -1,6 +1,6 @@
 package com.elorating.web;
 
-import com.elorating.utils.DateUtils;
+import com.elorating.web.utils.DateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;

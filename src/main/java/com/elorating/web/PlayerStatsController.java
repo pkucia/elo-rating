@@ -4,7 +4,7 @@ import com.elorating.model.OpponentStats;
 import com.elorating.player.PlayerMatchesStats;
 import com.elorating.model.RatingHistory;
 import com.elorating.player.PlayerStatsService;
-import com.elorating.utils.SortUtils;
+import com.elorating.web.utils.SortUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

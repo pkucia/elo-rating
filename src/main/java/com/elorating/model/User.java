@@ -2,7 +2,7 @@ package com.elorating.model;
 
 import com.elorating.league.League;
 import com.elorating.player.Player;
-import com.elorating.utils.DateUtils;
+import com.elorating.web.utils.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;

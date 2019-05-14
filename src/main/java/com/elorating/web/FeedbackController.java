@@ -1,11 +1,11 @@
 package com.elorating.web;
 
 import com.elorating.model.Feedback;
-import com.elorating.service.EmailService;
-import com.elorating.service.email.EmailBuilder;
-import com.elorating.service.email.EmailDirector;
-import com.elorating.service.email.FeedbackConfirmationEmail;
-import com.elorating.service.email.FeedbackEmail;
+import com.elorating.email.EmailService;
+import com.elorating.email.EmailBuilder;
+import com.elorating.email.EmailDirector;
+import com.elorating.email.builder.FeedbackConfirmationEmail;
+import com.elorating.email.builder.FeedbackEmail;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;

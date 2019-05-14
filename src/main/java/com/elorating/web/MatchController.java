@@ -4,7 +4,7 @@ import com.elorating.league.League;
 import com.elorating.match.Match;
 import com.elorating.player.PlayerService;
 import com.elorating.match.MatchService;
-import com.elorating.utils.SortUtils;
+import com.elorating.web.utils.SortUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

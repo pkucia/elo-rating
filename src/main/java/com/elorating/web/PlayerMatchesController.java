@@ -2,7 +2,7 @@ package com.elorating.web;
 
 import com.elorating.match.Match;
 import com.elorating.player.PlayerMatchesService;
-import com.elorating.utils.SortUtils;
+import com.elorating.web.utils.SortUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

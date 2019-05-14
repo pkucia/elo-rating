@@ -5,7 +5,7 @@ import com.elorating.match.Match;
 import com.elorating.player.Player;
 import com.elorating.player.PlayerService;
 import com.elorating.match.MatchService;
-import com.elorating.utils.MatchTestUtils;
+import com.elorating.web.utils.MatchTestUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.hamcrest.Matchers;
 import org.junit.After;

@@ -2,9 +2,9 @@ package com.elorating.match;
 
 import com.elorating.player.Player;
 import com.elorating.player.PlayerRepository;
-import com.elorating.service.EmailService;
-import com.elorating.service.email.EmailGenerator;
-import com.elorating.utils.DateUtils;
+import com.elorating.email.EmailService;
+import com.elorating.email.EmailGenerator;
+import com.elorating.web.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
