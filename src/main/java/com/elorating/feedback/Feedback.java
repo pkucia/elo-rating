@@ -1,4 +1,4 @@
-package com.elorating.model;
+package com.elorating.feedback;
 
 public class Feedback {
     private String sender;

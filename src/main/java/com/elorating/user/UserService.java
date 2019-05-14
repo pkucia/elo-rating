@@ -1,6 +1,5 @@
 package com.elorating.user;
 
-import com.elorating.model.User;
 import com.elorating.player.Player;
 
 import java.util.List;

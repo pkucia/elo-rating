@@ -1,7 +1,7 @@
 package com.elorating.player;
 
 import com.elorating.league.League;
-import com.elorating.model.User;
+import com.elorating.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;

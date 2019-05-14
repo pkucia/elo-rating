@@ -1,5 +1,6 @@
-package com.elorating.model;
+package com.elorating.user;
 
+import com.elorating.email.EmailsNotifications;
 import com.elorating.league.League;
 import com.elorating.player.Player;
 import com.elorating.web.utils.DateUtils;

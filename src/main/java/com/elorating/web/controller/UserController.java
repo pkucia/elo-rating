@@ -1,9 +1,9 @@
 package com.elorating.web.controller;
 
-import com.elorating.model.EmailsNotifications;
-import com.elorating.model.Invitation;
+import com.elorating.email.EmailsNotifications;
+import com.elorating.user.Invitation;
 import com.elorating.player.Player;
-import com.elorating.model.User;
+import com.elorating.user.User;
 import com.elorating.auth.GoogleAuthService;
 import com.elorating.user.UserService;
 import com.elorating.web.utils.DateUtils;

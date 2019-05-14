@@ -1,4 +1,4 @@
-package com.elorating.model;
+package com.elorating.player;
 
 import com.elorating.match.Match;
 import com.elorating.player.Player;

@@ -1,8 +1,6 @@
 package com.elorating.player;
 
 import com.elorating.match.Match;
-import com.elorating.model.OpponentStats;
-import com.elorating.model.RatingHistory;
 import com.elorating.match.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

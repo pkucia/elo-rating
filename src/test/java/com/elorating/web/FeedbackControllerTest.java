@@ -1,6 +1,6 @@
 package com.elorating.web;
 
-import com.elorating.model.Feedback;
+import com.elorating.feedback.Feedback;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

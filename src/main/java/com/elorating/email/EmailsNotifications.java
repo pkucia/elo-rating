@@ -1,4 +1,4 @@
-package com.elorating.model;
+package com.elorating.email;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

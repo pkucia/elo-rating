@@ -2,7 +2,7 @@ package com.elorating.auth;
 
 import com.elorating.league.League;
 import com.elorating.league.LeagueRepository;
-import com.elorating.model.User;
+import com.elorating.user.User;
 import com.elorating.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;

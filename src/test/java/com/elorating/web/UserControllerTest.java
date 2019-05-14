@@ -1,8 +1,8 @@
 package com.elorating.web;
 
 import com.elorating.league.League;
-import com.elorating.model.EmailsNotifications;
-import com.elorating.model.User;
+import com.elorating.email.EmailsNotifications;
+import com.elorating.user.User;
 import com.elorating.player.Player;
 import com.elorating.player.PlayerService;
 import com.elorating.user.UserService;

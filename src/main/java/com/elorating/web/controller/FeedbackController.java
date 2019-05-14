@@ -1,6 +1,6 @@
 package com.elorating.web.controller;
 
-import com.elorating.model.Feedback;
+import com.elorating.feedback.Feedback;
 import com.elorating.email.EmailService;
 import com.elorating.email.EmailBuilder;
 import com.elorating.email.EmailDirector;

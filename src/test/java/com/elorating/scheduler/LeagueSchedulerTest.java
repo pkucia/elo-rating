@@ -5,7 +5,7 @@ import com.elorating.league.League;
 import com.elorating.league.LeagueScheduler;
 import com.elorating.match.Match;
 import com.elorating.player.Player;
-import com.elorating.model.User;
+import com.elorating.user.User;
 import com.elorating.league.LeagueRepository;
 import com.elorating.match.MatchRepository;
 import com.elorating.player.PlayerRepository;

@@ -1,7 +1,5 @@
 package com.elorating.player;
 
-import com.elorating.model.OpponentStats;
-import com.elorating.model.RatingHistory;
 import org.springframework.data.domain.Sort;
 
 import java.util.Date;

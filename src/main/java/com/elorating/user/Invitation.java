@@ -1,4 +1,4 @@
-package com.elorating.model;
+package com.elorating.user;
 
 public class Invitation {
     private String googleIdToken;

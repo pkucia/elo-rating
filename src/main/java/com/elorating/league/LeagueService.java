@@ -1,6 +1,6 @@
 package com.elorating.league;
 
-import com.elorating.model.User;
+import com.elorating.user.User;
 
 import java.util.List;
 import java.util.Optional;

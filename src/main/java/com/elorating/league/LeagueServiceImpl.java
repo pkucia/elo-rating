@@ -1,6 +1,6 @@
 package com.elorating.league;
 
-import com.elorating.model.User;
+import com.elorating.user.User;
 import com.elorating.match.MatchRepository;
 import com.elorating.player.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;

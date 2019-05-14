@@ -2,7 +2,7 @@ package com.elorating.auth;
 
 import com.elorating.league.League;
 import com.elorating.league.LeagueRepository;
-import com.elorating.model.User;
+import com.elorating.user.User;
 import com.elorating.user.UserRepository;
 import io.swagger.models.HttpMethod;
 import org.junit.Before;
