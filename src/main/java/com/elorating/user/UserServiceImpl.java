@@ -1,38 +1,44 @@
-package com.elorating.service;
+package com.elorating.user;
 
 import com.elorating.league.League;
-import com.elorating.player.Player;
-import com.elorating.model.User;
 import com.elorating.league.LeagueRepository;
+import com.elorating.model.User;
+import com.elorating.player.Player;
 import com.elorating.player.PlayerRepository;
-import com.elorating.repository.UserRepository;
-import com.elorating.service.email.*;
+import com.elorating.service.EmailService;
+import com.elorating.service.email.Email;
+import com.elorating.service.email.EmailBuilder;
+import com.elorating.service.email.EmailDirector;
+import com.elorating.service.email.InviteExistingUserEmail;
+import com.elorating.service.email.InviteNewUserEmail;
 import com.elorating.utils.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
 import java.util.UUID;
 
 @Service
-public class UserService implements RepositoryService<User> {
+class UserServiceImpl implements UserService {
 
-    @Resource
-    private LeagueRepository leagueRepository;
+    private final LeagueRepository leagueRepository;
+    private final UserRepository userRepository;
+    private final PlayerRepository playerRepository;
+    private final EmailService emailService;
 
-    @Resource
-    private UserRepository userRepository;
-
-    @Resource
-    private PlayerRepository playerRepository;
-
-    @Resource
-    private EmailService emailService;
+    @Autowired
+    public UserServiceImpl(LeagueRepository leagueRepository, UserRepository userRepository,
+                           PlayerRepository playerRepository, EmailService emailService) {
+        this.leagueRepository = leagueRepository;
+        this.userRepository = userRepository;
+        this.playerRepository = playerRepository;
+        this.emailService = emailService;
+    }
 
     @Override
-    public Optional<User> getById(String id) {
+    public Optional<User> get(String id) {
         return userRepository.findById(id);
     }
 
@@ -52,7 +58,7 @@ public class UserService implements RepositoryService<User> {
     }
 
     @Override
-    public void deleteById(String id) {
+    public void delete(String id) {
         userRepository.deleteById(id);
     }
 
@@ -61,18 +67,22 @@ public class UserService implements RepositoryService<User> {
         userRepository.deleteAll();
     }
 
+    @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
+    @Override
     public User findByInvitationToken(String token) {
         return userRepository.findByInvitationToken(token);
     }
 
+    @Override
     public List<User> findByNameLikeIgnoreCase(String name) {
         return userRepository.findByNameLikeIgnoreCase(name);
     }
 
+    @Override
     public User connectUserToLeagueAndPlayer(User user) {
         connectUserToLeague(user);
         if (user.getPlayers() != null && user.getPlayers().size() > 0)
@@ -80,6 +90,7 @@ public class UserService implements RepositoryService<User> {
         return user;
     }
 
+    @Override
     public User connectUserToLeague(User user) {
         String leagueId = user.getLeagues().get(0).getId();
         leagueRepository.findById(leagueId).ifPresent(league -> {
@@ -89,6 +100,7 @@ public class UserService implements RepositoryService<User> {
         return user;
     }
 
+    @Override
     public User connectUserToPlayer(User user) {
         String playerId = user.getPlayers().get(0).getId();
         playerRepository.findById(playerId).ifPresent(player -> {
@@ -98,6 +110,7 @@ public class UserService implements RepositoryService<User> {
         return user;
     }
 
+    @Override
     public User checkForPendingInvitation(User userFromGoogle) {
         User user = userRepository.findByEmailAndInvitationTokenExists(userFromGoogle.getEmail());
         if (user != null) {
@@ -110,6 +123,7 @@ public class UserService implements RepositoryService<User> {
         return user;
     }
 
+    @Override
     public User saveOrUpdateUser(User userFromGoogle) {
         User savedUser = userRepository.findByGoogleId(userFromGoogle.getGoogleId());
         if (savedUser != null) {
@@ -121,6 +135,7 @@ public class UserService implements RepositoryService<User> {
         return savedUser;
     }
 
+    @Override
     public User saveOrUpdateUser(User userFromGoogle, TimeZone timeZone) {
         User savedUser = userRepository.findByGoogleId(userFromGoogle.getGoogleId());
         if (savedUser != null) {
@@ -134,6 +149,7 @@ public class UserService implements RepositoryService<User> {
         return savedUser;
     }
 
+    @Override
     public User inviteNewUser(String currentUser, User userToInvite, String originUrl) {
         String token = UUID.randomUUID().toString();
         userToInvite.setInvitationToken(token);
@@ -144,6 +160,7 @@ public class UserService implements RepositoryService<User> {
         return userToInvite;
     }
 
+    @Override
     public User inviteExistingUser(String currentUser, User requestUser, String originUrl) {
         League league = requestUser.getLeagues().get(0);
         User userFromDB = userRepository.findByEmail(requestUser.getEmail());
@@ -155,6 +172,7 @@ public class UserService implements RepositoryService<User> {
         return invitedUser;
     }
 
+    @Override
     public User connectUserAndLeague(String userId, String leagueId) {
         Optional<User> user = userRepository.findById(userId);
         Optional<League> league = leagueRepository.findById(leagueId);
@@ -167,6 +185,7 @@ public class UserService implements RepositoryService<User> {
         return user.orElse(null);
     }
 
+    @Override
     public User connectUserAndPlayer(String userId, String playerId) {
         Optional<User> user = userRepository.findById(userId);
         Optional<Player> player = playerRepository.findById(playerId);
@@ -179,6 +198,7 @@ public class UserService implements RepositoryService<User> {
         return user.orElse(null);
     }
 
+    @Override
     public Player createPlayerForUser(String userId, String leagueId) {
         return userRepository.findById(userId).map(currentUser -> {
             League league = new League(leagueId);

@@ -5,7 +5,7 @@ import com.elorating.model.EmailsNotifications;
 import com.elorating.model.User;
 import com.elorating.player.Player;
 import com.elorating.player.PlayerService;
-import com.elorating.service.UserService;
+import com.elorating.user.UserService;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;

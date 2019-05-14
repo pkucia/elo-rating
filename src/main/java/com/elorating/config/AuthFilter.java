@@ -3,7 +3,7 @@ package com.elorating.config;
 import com.elorating.league.League;
 import com.elorating.model.User;
 import com.elorating.league.LeagueRepository;
-import com.elorating.repository.UserRepository;
+import com.elorating.user.UserRepository;
 import com.elorating.service.GoogleAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;

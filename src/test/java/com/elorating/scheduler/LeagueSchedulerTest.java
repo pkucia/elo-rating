@@ -9,7 +9,7 @@ import com.elorating.model.User;
 import com.elorating.league.LeagueRepository;
 import com.elorating.match.MatchRepository;
 import com.elorating.player.PlayerRepository;
-import com.elorating.repository.UserRepository;
+import com.elorating.user.UserRepository;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

@@ -5,7 +5,7 @@ import com.elorating.model.Invitation;
 import com.elorating.player.Player;
 import com.elorating.model.User;
 import com.elorating.service.GoogleAuthService;
-import com.elorating.service.UserService;
+import com.elorating.user.UserService;
 import com.elorating.utils.DateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,7 +37,7 @@ public class UserController {
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
     @ApiOperation(value = "Get user", notes = "Get user by id")
     public ResponseEntity<User> get(@PathVariable String id) {
-        User user = userService.getById(id).orElse(null);
+        User user = userService.get(id).orElse(null);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -59,7 +59,7 @@ public class UserController {
     @RequestMapping(value = "/users/emails-notifications", method = RequestMethod.POST)
     @ApiOperation(value = "Update user", notes = "Update user settings")
     public ResponseEntity<User> updateEmailNotifications(@RequestParam("user_id") String id, @RequestBody EmailsNotifications emailsNotifications) {
-        User userToUpdate = userService.getById(id).map(user -> {
+        User userToUpdate = userService.get(id).map(user -> {
             user.setEmailNotifications(emailsNotifications);
             return userService.saveOrUpdateUser(user);
         }).orElse(null);
@@ -127,7 +127,7 @@ public class UserController {
     public ResponseEntity<User> inviteUser(HttpServletRequest request,
                                            @PathVariable String id,
                                            @RequestBody User requestUser) {
-        Optional<User> currentUser = userService.getById(id);
+        Optional<User> currentUser = userService.get(id);
         if (currentUser.isPresent()) {
             String originUrl = request.getHeader("Origin");
             User userFromDB = userService.findByEmail(requestUser.getEmail());
@@ -146,7 +146,7 @@ public class UserController {
         if (!DateUtils.validateTimezone(timezone)) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        User user = userService.getById(id).map(userToUpdate -> {
+        User user = userService.get(id).map(userToUpdate -> {
             userToUpdate.setTimezone(timezone);
             return userService.saveOrUpdateUser(userToUpdate);
 
