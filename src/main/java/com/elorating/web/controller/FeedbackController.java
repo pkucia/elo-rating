@@ -1,4 +1,4 @@
-package com.elorating.web;
+package com.elorating.web.controller;
 
 import com.elorating.model.Feedback;
 import com.elorating.email.EmailService;

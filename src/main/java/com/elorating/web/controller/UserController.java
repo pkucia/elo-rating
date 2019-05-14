@@ -1,4 +1,4 @@
-package com.elorating.web;
+package com.elorating.web.controller;
 
 import com.elorating.model.EmailsNotifications;
 import com.elorating.model.Invitation;

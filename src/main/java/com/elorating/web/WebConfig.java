@@ -1,4 +1,4 @@
-package com.elorating.config;
+package com.elorating.web;
 
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 
 @Configuration
-public class AppConfig {
+public class WebConfig {
 
     /**
      * Bean for handling single page application that always redirect to /
