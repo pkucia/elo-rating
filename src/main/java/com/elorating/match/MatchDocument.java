@@ -1,30 +1,32 @@
 package com.elorating.match;
 
-import com.elorating.league.League;
-import com.elorating.player.Player;
+import com.elorating.league.LeagueDocument;
+import com.elorating.player.PlayerDocument;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.*;
 
-public class Match {
+@Document(collection = "match")
+public class MatchDocument {
 
     @Id
     private String id;
 
     @DBRef
     @JsonIgnoreProperties({"users", "settings"})
-    private League league;
+    private LeagueDocument league;
 
     @DBRef
     @JsonIgnoreProperties({"league"})
-    private Player playerOne;
+    private PlayerDocument playerOne;
 
     @DBRef
     @JsonIgnoreProperties({"league"})
-    private Player playerTwo;
+    private PlayerDocument playerTwo;
 
     private Map<String, Integer> scores;
 
@@ -36,36 +38,36 @@ public class Match {
 
     private int ratingDelta;
 
-    public Match() {
+    public MatchDocument() {
         this.date = new Date();
         this.scores = new HashMap<>();
         this.ratings = new HashMap<>();
     }
 
-    public Match(Player playerOne, Player playerTwo) {
+    public MatchDocument(PlayerDocument playerOne, PlayerDocument playerTwo) {
         this();
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
     }
 
-    public Match(Player playerOne, Player playerTwo, League league) {
+    public MatchDocument(PlayerDocument playerOne, PlayerDocument playerTwo, LeagueDocument league) {
         this(playerOne, playerTwo);
         this.league = league;
     }
 
-    public Match(Player playerOne, Player playerTwo, int playerOneScore, int playerTwoScore) {
+    public MatchDocument(PlayerDocument playerOne, PlayerDocument playerTwo, int playerOneScore, int playerTwoScore) {
         this(playerOne, playerTwo);
         this.scores.put(playerOne.getId(), playerOneScore);
         this.scores.put(playerTwo.getId(), playerTwoScore);
         this.setCompleted();
     }
 
-    public Match(Player playerOne, Player playerTwo, int playerOneScore, int playerTwoScore, Date date) {
+    public MatchDocument(PlayerDocument playerOne, PlayerDocument playerTwo, int playerOneScore, int playerTwoScore, Date date) {
         this(playerOne, playerTwo, playerOneScore, playerTwoScore);
         this.date = date;
     }
 
-    public Match(Player playerOne, Player playerTwo, int playerOneScore, int playerTwoScore, League league) {
+    public MatchDocument(PlayerDocument playerOne, PlayerDocument playerTwo, int playerOneScore, int playerTwoScore, LeagueDocument league) {
         this(playerOne, playerTwo, playerOneScore, playerTwoScore);
         this.league = league;
     }
@@ -74,27 +76,27 @@ public class Match {
         return scores.size() == 2;
     }
 
-    public Player getPlayerOne() {
+    public PlayerDocument getPlayerOne() {
         return playerOne;
     }
 
-    public void setPlayerOne(Player playerOne) {
+    public void setPlayerOne(PlayerDocument playerOne) {
         this.playerOne = playerOne;
     }
 
-    public Player getPlayerTwo() {
+    public PlayerDocument getPlayerTwo() {
         return playerTwo;
     }
 
-    public void setPlayerTwo(Player playerTwo) {
+    public void setPlayerTwo(PlayerDocument playerTwo) {
         this.playerTwo = playerTwo;
     }
 
-    public League getLeague() {
+    public LeagueDocument getLeague() {
         return league;
     }
 
-    public void setLeague(League league) {
+    public void setLeague(LeagueDocument league) {
         this.league = league;
     }
 
@@ -118,11 +120,11 @@ public class Match {
         return scores;
     }
 
-    public int getScore(Player player) {
+    public int getScore(PlayerDocument player) {
         return scores.get(player.getId());
     }
 
-    public void setScore(Player player, Integer score) {
+    public void setScore(PlayerDocument player, Integer score) {
         scores.put(player.getId(), score);
     }
 
@@ -130,11 +132,11 @@ public class Match {
         return ratings;
     }
 
-    public int getRating(Player player) {
+    public int getRating(PlayerDocument player) {
         return ratings.get(player.getId()) != null ? ratings.get(player.getId()) : 0;
     }
 
-    public void setRating(Player player, Integer rating) {
+    public void setRating(PlayerDocument player, Integer rating) {
         ratings.put(player.getId(), rating);
     }
 
@@ -146,7 +148,7 @@ public class Match {
         this.ratingDelta = ratingDelta;
     }
 
-    public int getRatingDelta(Player player) {
+    public int getRatingDelta(PlayerDocument player) {
         if (getPlayerOne().getId().equals(player.getId())) {
             return ratingDelta;
         } else {

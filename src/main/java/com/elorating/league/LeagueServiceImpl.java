@@ -3,14 +3,14 @@ package com.elorating.league;
 import com.elorating.common.AbstractCrudService;
 import com.elorating.match.MatchRepository;
 import com.elorating.player.PlayerRepository;
-import com.elorating.user.User;
+import com.elorating.user.UserDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-class LeagueServiceImpl extends AbstractCrudService<League, LeagueRepository> implements LeagueService {
+class LeagueServiceImpl extends AbstractCrudService<LeagueDocument, LeagueRepository> implements LeagueService {
 
     private MatchRepository matchRepository;
     private PlayerRepository playerRepository;
@@ -33,12 +33,12 @@ class LeagueServiceImpl extends AbstractCrudService<League, LeagueRepository> im
     }
 
     @Override
-    public List<League> findByName(String leagueName) {
+    public List<LeagueDocument> findByName(String leagueName) {
         return repository.findByNameLikeIgnoreCase(leagueName);
     }
 
     @Override
-    public League update(League league) {
+    public LeagueDocument update(LeagueDocument league) {
         return repository.findById(league.getId()).map(dbLeague -> {
             dbLeague.setName(league.getName());
             dbLeague.setSettings(league.getSettings());
@@ -48,19 +48,19 @@ class LeagueServiceImpl extends AbstractCrudService<League, LeagueRepository> im
     }
 
     @Override
-    public List<League> findUnassignedLeagues() {
+    public List<LeagueDocument> findUnassignedLeagues() {
         return repository.findByUsersNull();
     }
 
     @Override
-    public League findByIdAndUser(String leagueId, User user) {
+    public LeagueDocument findByIdAndUser(String leagueId, UserDocument user) {
         return repository.findByIdAndUsers(leagueId, user);
     }
 
     @Override
     public LeagueSettings getSettings(String id) {
         return repository.findById(id)
-                .map(League::getSettings)
+                .map(LeagueDocument::getSettings)
                 .orElse(null);
     }
 }

@@ -7,17 +7,17 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
-public interface MatchService extends CrudService<Match> {
+public interface MatchService extends CrudService<MatchDocument> {
 
-    List<Match> saveAndNotify(List<Match> matches, String originUrl);
-    Match saveAndNotify(Match match, String originUrl);
+    List<MatchDocument> saveAndNotify(List<MatchDocument> matches, String originUrl);
+    MatchDocument saveAndNotify(MatchDocument match, String originUrl);
     void deleteByIdWithNotification(String id, String originUrl);
-    Match saveMatchWithPlayers(Match match);
-    List<Match> findByLeagueId(String leagueId, Sort sortByDate);
-    Page<Match> findByLeagueIdAndCompletedIsTrue(String leagueId, Pageable pageRequest);
-    List<Match> findByLeagueIdAndCompletedIsFalse(String leagueId, Sort sortByDate);
-    List<Match> findByPlayerId(String playerId);
-    List<Match> findByCompletedIsFalse();
-    List<Match> rescheduleMatchesInLeague(String leagueId, int minutes, Sort sort, String originUrl);
-    boolean checkIfCompleted(Match match);
+    MatchDocument saveMatchWithPlayers(MatchDocument match);
+    List<MatchDocument> findByLeagueId(String leagueId, Sort sortByDate);
+    Page<MatchDocument> findByLeagueIdAndCompletedIsTrue(String leagueId, Pageable pageRequest);
+    List<MatchDocument> findByLeagueIdAndCompletedIsFalse(String leagueId, Sort sortByDate);
+    List<MatchDocument> findByPlayerId(String playerId);
+    List<MatchDocument> findByCompletedIsFalse();
+    List<MatchDocument> rescheduleMatchesInLeague(String leagueId, int minutes, Sort sort, String originUrl);
+    boolean checkIfCompleted(MatchDocument match);
 }

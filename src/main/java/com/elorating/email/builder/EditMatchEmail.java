@@ -2,16 +2,16 @@ package com.elorating.email.builder;
 
 import com.elorating.email.EmailBuilder;
 import com.elorating.email.EmailStrings;
-import com.elorating.league.League;
+import com.elorating.league.LeagueDocument;
 import org.thymeleaf.context.Context;
 
 public class EditMatchEmail extends EmailBuilder {
 
     private String opponent;
     private String matchtime;
-    private League league;
+    private LeagueDocument league;
 
-    public EditMatchEmail(String opponent, String recipient, String matchtime, String originUrl, League league) {
+    public EditMatchEmail(String opponent, String recipient, String matchtime, String originUrl, LeagueDocument league) {
         this.opponent = opponent;
         this.recipient = recipient;
         this.matchtime = matchtime;

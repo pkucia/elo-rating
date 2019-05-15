@@ -1,8 +1,8 @@
 package com.elorating.auth;
 
-import com.elorating.league.League;
+import com.elorating.league.LeagueDocument;
 import com.elorating.league.LeagueRepository;
-import com.elorating.user.User;
+import com.elorating.user.UserDocument;
 import com.elorating.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -46,7 +46,7 @@ public class AuthFilter extends OncePerRequestFilter {
         String leagueId = getLeagueId(request.getRequestURI());
         if (!isMethodToAuthorize(request) || leagueId == null)
             return true;
-        League league = leagueRepository.findById(leagueId).orElseGet(League::new);
+        LeagueDocument league = leagueRepository.findById(leagueId).orElseGet(LeagueDocument::new);
         if (!league.isAssigned())
             return true;
         String token = request.getHeader(X_AUTHORIZATION);
@@ -72,8 +72,8 @@ public class AuthFilter extends OncePerRequestFilter {
         }
     }
 
-    private boolean isUserAuthorized(League league, String token) {
-        User user = googleAuthService.getUserFromToken(token);
+    private boolean isUserAuthorized(LeagueDocument league, String token) {
+        UserDocument user = googleAuthService.getUserFromToken(token);
         if (user == null)
             return false;
         user = userRepository.findByGoogleId(user.getGoogleId());

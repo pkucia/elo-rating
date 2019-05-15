@@ -1,14 +1,16 @@
 package com.elorating.league;
 
-import com.elorating.user.User;
+import com.elorating.user.UserDocument;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class League {
+@Document(collection = "league")
+public class LeagueDocument {
 
     @Id
     private String id;
@@ -17,20 +19,20 @@ public class League {
 
     @DBRef(lazy = true)
     @JsonIgnoreProperties({"leagues", "player"})
-    private List<User> users;
+    private List<UserDocument> users;
 
     private LeagueSettings settings;
 
-    public League() {
+    public LeagueDocument() {
         this.settings = new LeagueSettings();
     }
 
-    public League(String id) {
+    public LeagueDocument(String id) {
         this();
         this.id = id;
     }
 
-    public League(String id, String name) {
+    public LeagueDocument(String id, String name) {
         this(id);
         this.name = name;
     }
@@ -51,11 +53,11 @@ public class League {
         this.name = name;
     }
 
-    public List<User> getUsers() {
+    public List<UserDocument> getUsers() {
         return users;
     }
 
-    public void addUser(User user) {
+    public void addUser(UserDocument user) {
         if (users == null)
             users = new ArrayList<>();
         users.add(user);

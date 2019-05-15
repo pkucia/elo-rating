@@ -1,19 +1,21 @@
 package com.elorating.user;
 
 import com.elorating.email.EmailsNotifications;
-import com.elorating.league.League;
-import com.elorating.player.Player;
+import com.elorating.league.LeagueDocument;
+import com.elorating.player.PlayerDocument;
 import com.elorating.web.utils.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class User {
+@Document(collection = "user")
+public class UserDocument {
     @Id
     private String id;
     private String googleId;
@@ -26,25 +28,25 @@ public class User {
     private String invitationToken;
     @DBRef(lazy = true)
     @JsonIgnoreProperties("users")
-    private List<League> leagues;
+    private List<LeagueDocument> leagues;
     @DBRef(lazy = true)
     @JsonIgnoreProperties({"user"})
-    private List<Player> players;
+    private List<PlayerDocument> players;
     private EmailsNotifications emailsNotifications;
     private String timezone;
 
-    public User() { }
+    public UserDocument() { }
 
-    public User(String name) {
+    public UserDocument(String name) {
         this.name = name;
     }
 
-    public User(String name, String email) {
+    public UserDocument(String name, String email) {
         this(name);
         this.email = email;
     }
 
-    public void update(User user) {
+    public void update(UserDocument user) {
         this.name = user.name;
         this.givenName = user.givenName;
         this.familyName = user.familyName;
@@ -115,11 +117,11 @@ public class User {
         this.lastSignIn = lastSignIn;
     }
 
-    public List<League> getLeagues() {
+    public List<LeagueDocument> getLeagues() {
         return leagues;
     }
 
-    public void addLeague(League league) {
+    public void addLeague(LeagueDocument league) {
         if (leagues == null)
             leagues = new ArrayList<>();
         leagues.add(league);
@@ -129,11 +131,11 @@ public class User {
         this.googleId = googleId;
     }
 
-    public List<Player> getPlayers() {
+    public List<PlayerDocument> getPlayers() {
         return players;
     }
 
-    public void addPlayer(Player player) {
+    public void addPlayer(PlayerDocument player) {
         if (players == null)
             players = new ArrayList<>();
         players.add(player);

@@ -1,6 +1,5 @@
-package com.elorating.model;
+package com.elorating.player;
 
-import com.elorating.player.Player;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,12 +10,12 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @RunWith(Parameterized.class)
-public class PlayerTest {
+public class PlayerDocumentTest {
     private int playerRating;
     private int opponentRating;
     private double playerExpected;
-    private Player player;
-    private Player opponent;
+    private PlayerDocument player;
+    private PlayerDocument opponent;
 
     @Parameterized.Parameters
     public static Collection<Object[]> setParameters() {
@@ -36,7 +35,7 @@ public class PlayerTest {
         });
     }
 
-    public PlayerTest(double playerRating, double opponentRating, double playerExpected) {
+    public PlayerDocumentTest(double playerRating, double opponentRating, double playerExpected) {
         this.playerRating = (int) playerRating;
         this.opponentRating = (int) opponentRating;
         this.playerExpected = playerExpected;
@@ -44,9 +43,9 @@ public class PlayerTest {
 
     @Before
     public void setUp() throws Exception {
-        player = new Player("Player one");
+        player = new PlayerDocument("PlayerDocument one");
         player.setRating(playerRating);
-        opponent = new Player("Player two");
+        opponent = new PlayerDocument("PlayerDocument two");
         opponent.setRating(opponentRating);
     }
 

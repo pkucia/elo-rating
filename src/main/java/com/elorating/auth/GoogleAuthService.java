@@ -1,6 +1,6 @@
 package com.elorating.auth;
 
-import com.elorating.user.User;
+import com.elorating.user.UserDocument;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -25,7 +25,7 @@ public class GoogleAuthService {
     @Value("${google.client.id}")
     private String clientId;
 
-    public User getUserFromToken(String token) {
+    public UserDocument getUserFromToken(String token) {
         GoogleIdToken idToken = verifyGoogleIdToken(token);
         if (idToken != null) {
             return createUserFromPayload(idToken.getPayload());
@@ -49,8 +49,8 @@ public class GoogleAuthService {
         }
     }
     
-    private User createUserFromPayload(Payload payload) {
-        User user = new User();
+    private UserDocument createUserFromPayload(Payload payload) {
+        UserDocument user = new UserDocument();
         user.setGoogleId(payload.getSubject());
         user.setName((String) payload.get("name"));
         user.setGivenName((String) payload.get("given_name"));

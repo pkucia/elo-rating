@@ -2,7 +2,7 @@ package com.elorating.email.builder;
 
 import com.elorating.email.EmailBuilder;
 import com.elorating.email.EmailStrings;
-import com.elorating.league.League;
+import com.elorating.league.LeagueDocument;
 import org.thymeleaf.context.Context;
 
 public class ScheduledMatchEmail extends EmailBuilder {
@@ -10,9 +10,9 @@ public class ScheduledMatchEmail extends EmailBuilder {
     private String opponent;
     private String recipient;
     private String matchtime;
-    private League league;
+    private LeagueDocument league;
 
-    public ScheduledMatchEmail(String opponent, String recipient, String matchtime, String originUrl, League league) {
+    public ScheduledMatchEmail(String opponent, String recipient, String matchtime, String originUrl, LeagueDocument league) {
         this.opponent = opponent;
         this.recipient = recipient;
         this.matchtime = matchtime;

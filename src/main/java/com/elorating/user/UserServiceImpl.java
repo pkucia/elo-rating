@@ -1,9 +1,9 @@
 package com.elorating.user;
 
 import com.elorating.common.AbstractCrudService;
-import com.elorating.league.League;
+import com.elorating.league.LeagueDocument;
 import com.elorating.league.LeagueRepository;
-import com.elorating.player.Player;
+import com.elorating.player.PlayerDocument;
 import com.elorating.player.PlayerRepository;
 import com.elorating.email.EmailService;
 import com.elorating.email.Email;
@@ -21,7 +21,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 @Service
-class UserServiceImpl extends AbstractCrudService<User, UserRepository> implements UserService {
+class UserServiceImpl extends AbstractCrudService<UserDocument, UserRepository> implements UserService {
 
     private final LeagueRepository leagueRepository;
     private final PlayerRepository playerRepository;
@@ -37,22 +37,22 @@ class UserServiceImpl extends AbstractCrudService<User, UserRepository> implemen
     }
 
     @Override
-    public User findByEmail(String email) {
+    public UserDocument findByEmail(String email) {
         return repository.findByEmail(email);
     }
 
     @Override
-    public User findByInvitationToken(String token) {
+    public UserDocument findByInvitationToken(String token) {
         return repository.findByInvitationToken(token);
     }
 
     @Override
-    public List<User> findByNameLikeIgnoreCase(String name) {
+    public List<UserDocument> findByNameLikeIgnoreCase(String name) {
         return repository.findByNameLikeIgnoreCase(name);
     }
 
     @Override
-    public User connectUserToLeagueAndPlayer(User user) {
+    public UserDocument connectUserToLeagueAndPlayer(UserDocument user) {
         connectUserToLeague(user);
         if (user.getPlayers() != null && user.getPlayers().size() > 0)
             connectUserToPlayer(user);
@@ -60,7 +60,7 @@ class UserServiceImpl extends AbstractCrudService<User, UserRepository> implemen
     }
 
     @Override
-    public User connectUserToLeague(User user) {
+    public UserDocument connectUserToLeague(UserDocument user) {
         String leagueId = user.getLeagues().get(0).getId();
         leagueRepository.findById(leagueId).ifPresent(league -> {
             league.getUsers().add(user);
@@ -70,7 +70,7 @@ class UserServiceImpl extends AbstractCrudService<User, UserRepository> implemen
     }
 
     @Override
-    public User connectUserToPlayer(User user) {
+    public UserDocument connectUserToPlayer(UserDocument user) {
         String playerId = user.getPlayers().get(0).getId();
         playerRepository.findById(playerId).ifPresent(player -> {
             player.setUser(user);
@@ -80,8 +80,8 @@ class UserServiceImpl extends AbstractCrudService<User, UserRepository> implemen
     }
 
     @Override
-    public User checkForPendingInvitation(User userFromGoogle) {
-        User user = repository.findByEmailAndInvitationTokenExists(userFromGoogle.getEmail());
+    public UserDocument checkForPendingInvitation(UserDocument userFromGoogle) {
+        UserDocument user = repository.findByEmailAndInvitationTokenExists(userFromGoogle.getEmail());
         if (user != null) {
             user.clearInvitationToken();
             user.update(userFromGoogle);
@@ -93,8 +93,8 @@ class UserServiceImpl extends AbstractCrudService<User, UserRepository> implemen
     }
 
     @Override
-    public User saveOrUpdateUser(User userFromGoogle) {
-        User savedUser = repository.findByGoogleId(userFromGoogle.getGoogleId());
+    public UserDocument saveOrUpdateUser(UserDocument userFromGoogle) {
+        UserDocument savedUser = repository.findByGoogleId(userFromGoogle.getGoogleId());
         if (savedUser != null) {
             savedUser.update(userFromGoogle);
             savedUser = repository.save(savedUser);
@@ -105,8 +105,8 @@ class UserServiceImpl extends AbstractCrudService<User, UserRepository> implemen
     }
 
     @Override
-    public User saveOrUpdateUser(User userFromGoogle, TimeZone timeZone) {
-        User savedUser = repository.findByGoogleId(userFromGoogle.getGoogleId());
+    public UserDocument saveOrUpdateUser(UserDocument userFromGoogle, TimeZone timeZone) {
+        UserDocument savedUser = repository.findByGoogleId(userFromGoogle.getGoogleId());
         if (savedUser != null) {
             savedUser.update(userFromGoogle);
             savedUser = setUserTimezone(savedUser, timeZone);
@@ -119,7 +119,7 @@ class UserServiceImpl extends AbstractCrudService<User, UserRepository> implemen
     }
 
     @Override
-    public User inviteNewUser(String currentUser, User userToInvite, String originUrl) {
+    public UserDocument inviteNewUser(String currentUser, UserDocument userToInvite, String originUrl) {
         String token = UUID.randomUUID().toString();
         userToInvite.setInvitationToken(token);
         repository.save(userToInvite);
@@ -130,10 +130,10 @@ class UserServiceImpl extends AbstractCrudService<User, UserRepository> implemen
     }
 
     @Override
-    public User inviteExistingUser(String currentUser, User requestUser, String originUrl) {
-        League league = requestUser.getLeagues().get(0);
-        User userFromDB = repository.findByEmail(requestUser.getEmail());
-        User invitedUser = connectUserAndLeague(userFromDB.getId(), league.getId());
+    public UserDocument inviteExistingUser(String currentUser, UserDocument requestUser, String originUrl) {
+        LeagueDocument league = requestUser.getLeagues().get(0);
+        UserDocument userFromDB = repository.findByEmail(requestUser.getEmail());
+        UserDocument invitedUser = connectUserAndLeague(userFromDB.getId(), league.getId());
         if (requestUser.getPlayers() != null && requestUser.getPlayers().size() > 0)
             invitedUser = connectUserAndPlayer(userFromDB.getId(), requestUser.getPlayers().get(0).getId());
         EmailBuilder emailBuilder = new InviteExistingUserEmail(invitedUser.getEmail(), currentUser, originUrl, league);
@@ -142,9 +142,9 @@ class UserServiceImpl extends AbstractCrudService<User, UserRepository> implemen
     }
 
     @Override
-    public User connectUserAndLeague(String userId, String leagueId) {
-        Optional<User> user = repository.findById(userId);
-        Optional<League> league = leagueRepository.findById(leagueId);
+    public UserDocument connectUserAndLeague(String userId, String leagueId) {
+        Optional<UserDocument> user = repository.findById(userId);
+        Optional<LeagueDocument> league = leagueRepository.findById(leagueId);
         if (user.isPresent() && league.isPresent()) {
             user.get().addLeague(league.get());
             repository.save(user.get());
@@ -155,9 +155,9 @@ class UserServiceImpl extends AbstractCrudService<User, UserRepository> implemen
     }
 
     @Override
-    public User connectUserAndPlayer(String userId, String playerId) {
-        Optional<User> user = repository.findById(userId);
-        Optional<Player> player = playerRepository.findById(playerId);
+    public UserDocument connectUserAndPlayer(String userId, String playerId) {
+        Optional<UserDocument> user = repository.findById(userId);
+        Optional<PlayerDocument> player = playerRepository.findById(playerId);
         if (user.isPresent() && player.isPresent()) {
             user.get().addPlayer(player.get());
             repository.save(user.get());
@@ -168,10 +168,10 @@ class UserServiceImpl extends AbstractCrudService<User, UserRepository> implemen
     }
 
     @Override
-    public Player createPlayerForUser(String userId, String leagueId) {
+    public PlayerDocument createPlayerForUser(String userId, String leagueId) {
         return repository.findById(userId).map(currentUser -> {
-            League league = new League(leagueId);
-            Player player = new Player(currentUser.getName(), league);
+            LeagueDocument league = new LeagueDocument(leagueId);
+            PlayerDocument player = new PlayerDocument(currentUser.getName(), league);
             playerRepository.save(player);
             return player;
         }).orElse(null);
@@ -184,7 +184,7 @@ class UserServiceImpl extends AbstractCrudService<User, UserRepository> implemen
         emailService.send(email);
     }
 
-    private User setUserTimezone(User user, TimeZone timeZone) {
+    private UserDocument setUserTimezone(UserDocument user, TimeZone timeZone) {
         if (user.getTimezone() == null) {
             user.setTimezone(DateUtils.getTimezoneOffset(timeZone));
         }

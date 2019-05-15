@@ -7,8 +7,7 @@ import com.elorating.email.builder.FeedbackEmail;
 import com.elorating.email.builder.InviteExistingUserEmail;
 import com.elorating.email.builder.InviteNewUserEmail;
 import com.elorating.email.builder.ScheduledMatchEmail;
-import com.elorating.league.League;
-import com.elorating.service.BaseServiceTest;
+import com.elorating.league.LeagueDocument;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * It doesn't check anything - just to see email's look
  */
 @Ignore
-public class EmailTemplatesTest extends BaseServiceTest {
+public class EmailTemplatesTest {
 
     private static final String RECIPIENT = "put@mail.here";
 
@@ -55,7 +54,7 @@ public class EmailTemplatesTest extends BaseServiceTest {
     public void testInviteExisting() throws Exception {
         EmailBuilder builder = new InviteExistingUserEmail(RECIPIENT, "Some user",
                 "https://elo-rating.herokuapp.com",
-                new League("123", "League naem"));
+                new LeagueDocument("123", "LeagueDocument naem"));
         director.setBuilder(builder);
         emailService.send(director.build());
     }
@@ -64,7 +63,7 @@ public class EmailTemplatesTest extends BaseServiceTest {
     public void testScheduledMatch() throws Exception {
         EmailBuilder builder = new ScheduledMatchEmail("Opponent", RECIPIENT,
                 "16:30", "https://elo-rating.herokuapp.com",
-                new League("123", "League naem"));
+                new LeagueDocument("123", "LeagueDocument naem"));
         director.setBuilder(builder);
         emailService.send(director.build());
     }
@@ -73,7 +72,7 @@ public class EmailTemplatesTest extends BaseServiceTest {
     public void testEditedMatch() throws Exception {
         EmailBuilder builder = new EditMatchEmail("Opponent", RECIPIENT,
                 "16:30", "https://elo-rating.herokuapp.com",
-                new League("123", "League naem"));
+                new LeagueDocument("123", "LeagueDocument naem"));
         director.setBuilder(builder);
         emailService.send(director.build());
     }
@@ -82,7 +81,7 @@ public class EmailTemplatesTest extends BaseServiceTest {
     public void testCancelledMatch() throws Exception {
         EmailBuilder builder = new CancelledMatchEmail("Opponent", RECIPIENT,
                 "https://elo-rating.herokuapp.com",
-                new League("123", "League naem"));
+                new LeagueDocument("123", "LeagueDocument naem"));
         director.setBuilder(builder);
         emailService.send(director.build());
     }

@@ -1,6 +1,6 @@
 package com.elorating.player;
 
-import com.elorating.match.Match;
+import com.elorating.match.MatchDocument;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -10,13 +10,13 @@ import java.util.List;
 
 public interface PlayerMatchesService {
 
-    List<Match> findByPlayerId(String playerId, Sort sort);
-    List<Match> findScheduledByPlayerId(String playerId, Sort sort);
-    Page<Match> findCompletedByPlayerId(String playerId, PageRequest pageRequest);
-    List<Match> findCompletedByPlayerId(String playerId, Sort sort);
-    List<Match> findCompletedByPlayerIds(String playerId, String opponentId, Sort sort);
-    Page<Match> findCompletedByPlayerIds(String playerId, String opponentId, PageRequest pageRequest);
-    List<Match> findCompletedByPlayerIdAndDate(String playerId, Date from, Sort sort);
-    List<Match> findCompletedByPlayerIdAndDate(String playerId, Date from, Date to, Sort sort);
-    List<Match> getMatchForecast(String playerId, String opponentId);
+    List<MatchDocument> findByPlayerId(String playerId, Sort sort);
+    List<MatchDocument> findScheduledByPlayerId(String playerId, Sort sort);
+    Page<MatchDocument> findCompletedByPlayerId(String playerId, PageRequest pageRequest);
+    List<MatchDocument> findCompletedByPlayerId(String playerId, Sort sort);
+    List<MatchDocument> findCompletedByPlayerIds(String playerId, String opponentId, Sort sort);
+    Page<MatchDocument> findCompletedByPlayerIds(String playerId, String opponentId, PageRequest pageRequest);
+    List<MatchDocument> findCompletedByPlayerIdAndDate(String playerId, Date from, Sort sort);
+    List<MatchDocument> findCompletedByPlayerIdAndDate(String playerId, Date from, Date to, Sort sort);
+    List<MatchDocument> getMatchForecast(String playerId, String opponentId);
 }

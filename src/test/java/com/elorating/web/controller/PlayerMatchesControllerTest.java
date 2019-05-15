@@ -1,8 +1,8 @@
-package com.elorating.web;
+package com.elorating.web.controller;
 
-import com.elorating.league.League;
-import com.elorating.match.Match;
-import com.elorating.player.Player;
+import com.elorating.league.LeagueDocument;
+import com.elorating.match.MatchDocument;
+import com.elorating.player.PlayerDocument;
 import com.elorating.player.PlayerService;
 import com.elorating.match.MatchService;
 import org.hamcrest.Matchers;
@@ -30,20 +30,20 @@ public class PlayerMatchesControllerTest extends BaseControllerTest {
     @Autowired
     private MatchService matchService;
 
-    private Player playerOne;
+    private PlayerDocument playerOne;
 
-    private Player playerTwo;
+    private PlayerDocument playerTwo;
 
     @Before
     public void setUp() throws Exception {
         mockMvc = webAppContextSetup(webApplicationContext).build();
-        league = leagueService.save(new League(null, "League"));
-        playerOne = playerService.save(new Player("PlayerOne", league));
-        playerTwo = playerService.save(new Player("PlayerTwo", league));
+        league = leagueService.save(new LeagueDocument(null, "LeagueDocument"));
+        playerOne = playerService.save(new PlayerDocument("PlayerOne", league));
+        playerTwo = playerService.save(new PlayerDocument("PlayerTwo", league));
         Calendar calendar = Calendar.getInstance();
         for (int i = 0; i < RETRIES; i++) {
             calendar.add(Calendar.DATE, -5);
-            matchService.save(new Match(playerOne, playerTwo, 2, 1, calendar.getTime()));
+            matchService.save(new MatchDocument(playerOne, playerTwo, 2, 1, calendar.getTime()));
         }
     }
 
@@ -56,8 +56,8 @@ public class PlayerMatchesControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetPlayerMatches() throws Exception {
-        matchService.save(new Match(playerOne, playerTwo, 2, 0));
-        matchService.save(new Match(playerTwo, playerOne));
+        matchService.save(new MatchDocument(playerOne, playerTwo, 2, 0));
+        matchService.save(new MatchDocument(playerTwo, playerOne));
         mockMvc.perform(get("/api/players/" + playerOne.getId() + "/matches")
                 .contentType(contentType))
                 .andExpect(status().isOk())
@@ -121,8 +121,8 @@ public class PlayerMatchesControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetPlayerScheduledMatches() throws Exception {
-        matchService.save(new Match(playerOne, playerTwo));
-        matchService.save(new Match(playerTwo, playerOne));
+        matchService.save(new MatchDocument(playerOne, playerTwo));
+        matchService.save(new MatchDocument(playerTwo, playerOne));
         mockMvc.perform(get("/api/players/" + playerOne.getId() + "/scheduled-matches")
                 .contentType(contentType))
                 .andExpect(status().isOk())

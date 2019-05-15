@@ -3,7 +3,7 @@ package com.elorating.match;
 import com.elorating.common.AbstractCrudService;
 import com.elorating.email.EmailGenerator;
 import com.elorating.email.EmailService;
-import com.elorating.player.Player;
+import com.elorating.player.PlayerDocument;
 import com.elorating.player.PlayerRepository;
 import com.elorating.web.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-class MatchServiceImpl extends AbstractCrudService<Match, MatchRepository> implements MatchService {
+class MatchServiceImpl extends AbstractCrudService<MatchDocument, MatchRepository> implements MatchService {
 
     private final PlayerRepository playerRepository;
     private final EmailService emailService;
@@ -34,15 +34,15 @@ class MatchServiceImpl extends AbstractCrudService<Match, MatchRepository> imple
     }
 
     @Override
-    public List<Match> saveAndNotify(List<Match> matches, String originUrl) {
-        for (Match match : matches) {
+    public List<MatchDocument> saveAndNotify(List<MatchDocument> matches, String originUrl) {
+        for (MatchDocument match : matches) {
             saveAndNotify(match, originUrl);
         }
         return matches;
     }
 
     @Override
-    public Match saveAndNotify(Match match, String originUrl) {
+    public MatchDocument saveAndNotify(MatchDocument match, String originUrl) {
         boolean update = checkIfMatchToUpdate(match);
         match = save(match);
         match = fulfillPlayersInfo(match);
@@ -66,7 +66,7 @@ class MatchServiceImpl extends AbstractCrudService<Match, MatchRepository> imple
     }
 
     @Override
-    public Match saveMatchWithPlayers(Match match) {
+    public MatchDocument saveMatchWithPlayers(MatchDocument match) {
         Elo elo = new Elo(match);
         match.getPlayerOne().setRating(elo.getPlayerOneRating());
         match.getPlayerTwo().setRating(elo.getPlayerTwoRating());
@@ -78,7 +78,7 @@ class MatchServiceImpl extends AbstractCrudService<Match, MatchRepository> imple
         return save(match);
     }
 
-    private void updatePlayer(Player player, String winnerId) {
+    private void updatePlayer(PlayerDocument player, String winnerId) {
         playerRepository.findById(player.getId()).ifPresent(playerToUpdate -> {
             playerToUpdate.setRating(player.getRating());
             playerToUpdate.updateStatistics(winnerId);
@@ -87,39 +87,39 @@ class MatchServiceImpl extends AbstractCrudService<Match, MatchRepository> imple
     }
 
     @Override
-    public List<Match> findByLeagueId(String leagueId, Sort sortByDate) {
+    public List<MatchDocument> findByLeagueId(String leagueId, Sort sortByDate) {
         return repository.findByLeagueId(leagueId, sortByDate);
     }
 
     @Override
-    public Page<Match> findByLeagueIdAndCompletedIsTrue(String leagueId, Pageable pageRequest) {
+    public Page<MatchDocument> findByLeagueIdAndCompletedIsTrue(String leagueId, Pageable pageRequest) {
         return repository.findByLeagueIdAndCompletedIsTrue(leagueId, pageRequest);
     }
 
     @Override
-    public List<Match> findByLeagueIdAndCompletedIsFalse(String leagueId, Sort sortByDate) {
+    public List<MatchDocument> findByLeagueIdAndCompletedIsFalse(String leagueId, Sort sortByDate) {
         return repository.findByLeagueIdAndCompletedIsFalse(leagueId, sortByDate);
     }
 
     @Override
-    public List<Match> findByPlayerId(String playerId) {
+    public List<MatchDocument> findByPlayerId(String playerId) {
         return repository.findByPlayerId(playerId);
     }
 
     @Override
-    public List<Match> findByCompletedIsFalse() {
+    public List<MatchDocument> findByCompletedIsFalse() {
         return repository.findByCompletedIsFalse();
     }
 
     @Override
-    public List<Match> rescheduleMatchesInLeague(String leagueId, int minutes,
-                                                 Sort sort, String originUrl) {
-        List<Match> matchesInQueue = repository.findByLeagueIdAndCompletedIsFalse(leagueId, sort);
-        List<Match> matchesToReschedule = new ArrayList<>(matchesInQueue.size());
+    public List<MatchDocument> rescheduleMatchesInLeague(String leagueId, int minutes,
+                                                         Sort sort, String originUrl) {
+        List<MatchDocument> matchesInQueue = repository.findByLeagueIdAndCompletedIsFalse(leagueId, sort);
+        List<MatchDocument> matchesToReschedule = new ArrayList<>(matchesInQueue.size());
 
         Date rescheduleTime = new Date();
         for (int i = 0; i < matchesInQueue.size(); i++) {
-            Match match = matchesInQueue.get(i);
+            MatchDocument match = matchesInQueue.get(i);
             if (i == 0 && match.getDate().getTime() <= rescheduleTime.getTime()) {
                 match.setDate(DateUtils.adjustTimeByMinutesIntoFuture(match.getDate(), minutes));
                 matchesToReschedule.add(match);
@@ -137,23 +137,23 @@ class MatchServiceImpl extends AbstractCrudService<Match, MatchRepository> imple
     }
 
     @Override
-    public boolean checkIfCompleted(Match match) {
+    public boolean checkIfCompleted(MatchDocument match) {
         if (match.getId() != null && match.getId().length() > 0) {
-            Match matchToCheck = repository.findByIdAndCompletedIsTrue(match.getId());
+            MatchDocument matchToCheck = repository.findByIdAndCompletedIsTrue(match.getId());
             return matchToCheck != null;
         }
         return false;
     }
 
-    private boolean checkIfMatchToUpdate(Match match) {
+    private boolean checkIfMatchToUpdate(MatchDocument match) {
         return match.getId() != null ? true : false;
     }
 
-    private Match fulfillPlayersInfo(Match match) {
-        Optional<Player> playerOne = playerRepository.findById(match.getPlayerOne().getId());
-        match.setPlayerOne(playerOne.orElseGet(Player::new));
-        Optional<Player> playerTwo = playerRepository.findById(match.getPlayerTwo().getId());
-        match.setPlayerTwo(playerTwo.orElseGet(Player::new));
+    private MatchDocument fulfillPlayersInfo(MatchDocument match) {
+        Optional<PlayerDocument> playerOne = playerRepository.findById(match.getPlayerOne().getId());
+        match.setPlayerOne(playerOne.orElseGet(PlayerDocument::new));
+        Optional<PlayerDocument> playerTwo = playerRepository.findById(match.getPlayerTwo().getId());
+        match.setPlayerTwo(playerTwo.orElseGet(PlayerDocument::new));
         return match;
     }
 }

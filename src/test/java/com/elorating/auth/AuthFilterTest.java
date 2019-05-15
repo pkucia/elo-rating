@@ -1,8 +1,8 @@
 package com.elorating.auth;
 
-import com.elorating.league.League;
+import com.elorating.league.LeagueDocument;
 import com.elorating.league.LeagueRepository;
-import com.elorating.user.User;
+import com.elorating.user.UserDocument;
 import com.elorating.user.UserRepository;
 import io.swagger.models.HttpMethod;
 import org.junit.Before;
@@ -54,8 +54,8 @@ public class AuthFilterTest {
         when(request.getRequestURI()).thenReturn("/api/leagues/12345");
         when(request.getMethod()).thenReturn(HttpMethod.POST.name());
         when(request.getHeader(anyString())).thenReturn(USER_TOKEN);
-        League league = new League("12345");
-        league.addUser(new User());
+        LeagueDocument league = new LeagueDocument("12345");
+        league.addUser(new UserDocument());
         when(leagueRepository.findById(anyString())).thenReturn(Optional.of(league));
     }
 
@@ -89,7 +89,7 @@ public class AuthFilterTest {
 
     @Test
     public void testDoFilterInternalLeagueUnassigned() throws Exception {
-        when(leagueRepository.findById(anyString())).thenReturn(Optional.of(new League()));
+        when(leagueRepository.findById(anyString())).thenReturn(Optional.of(new LeagueDocument()));
         authFilter.doFilterInternal(request, response, filterChain);
         Mockito.verify(filterChain, Mockito.times(1)).doFilter(any(), any());
     }
@@ -103,18 +103,18 @@ public class AuthFilterTest {
 
     @Test
     public void testDoFilterInternalUserAuthorized() throws Exception {
-        User user = new User();
+        UserDocument user = new UserDocument();
         user.setGoogleId(GOOGLE_ID);
         when(googleAuthService.getUserFromToken(eq(USER_TOKEN))).thenReturn(user);
         when(userRepository.findByGoogleId(eq(GOOGLE_ID))).thenReturn(user);
-        when(leagueRepository.findByIdAndUsers(anyString(), any())).thenReturn(new League());
+        when(leagueRepository.findByIdAndUsers(anyString(), any())).thenReturn(new LeagueDocument());
         authFilter.doFilterInternal(request, response, filterChain);
         Mockito.verify(filterChain, Mockito.times(1)).doFilter(any(), any());
     }
 
     @Test
     public void testDoFilterInternalUserNotAuthorized() throws Exception {
-        User user = new User();
+        UserDocument user = new UserDocument();
         user.setGoogleId(GOOGLE_ID);
         when(googleAuthService.getUserFromToken(eq(USER_TOKEN))).thenReturn(user);
         when(userRepository.findByGoogleId(anyString())).thenReturn(user);

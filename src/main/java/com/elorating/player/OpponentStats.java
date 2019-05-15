@@ -1,31 +1,29 @@
 package com.elorating.player;
 
-import com.elorating.match.Match;
-import com.elorating.player.Player;
-import com.elorating.player.PlayerStats;
+import com.elorating.match.MatchDocument;
 import io.swagger.annotations.ApiModel;
 
 import java.util.List;
 
-@ApiModel("Player's opponent statistics")
+@ApiModel("PlayerDocument's opponent statistics")
 public class OpponentStats extends PlayerStats {
 
     private String id;
-    private Player player;
-    private Player opponent;
+    private PlayerDocument player;
+    private PlayerDocument opponent;
     private int pointsGained;
     private int streak;
 
-    public OpponentStats(Player player, Player opponent) {
+    public OpponentStats(PlayerDocument player, PlayerDocument opponent) {
         super();
         this.player = player;
         this.opponent = opponent;
     }
 
-    public void setStats(List<Match> matches) {
+    public void setStats(List<MatchDocument> matches) {
         streak = 0;
         boolean stopStreak = false;
-        for (Match match : matches) {
+        for (MatchDocument match : matches) {
             if (match.isDraw()) {
                 draw++;
                 stopStreak = true;
@@ -54,11 +52,11 @@ public class OpponentStats extends PlayerStats {
         this.pointsGained = pointsGained;
     }
 
-    public Player getPlayer() {
+    public PlayerDocument getPlayer() {
         return player;
     }
 
-    public Player getOpponent() {
+    public PlayerDocument getOpponent() {
         return opponent;
     }
 

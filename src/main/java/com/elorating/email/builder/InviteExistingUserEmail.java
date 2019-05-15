@@ -1,16 +1,16 @@
 package com.elorating.email.builder;
 
 import com.elorating.email.EmailBuilder;
-import com.elorating.league.League;
+import com.elorating.league.LeagueDocument;
 import org.thymeleaf.context.Context;
 
 public class InviteExistingUserEmail extends EmailBuilder {
 
     private String currentUser;
-    private League league;
+    private LeagueDocument league;
 
     public InviteExistingUserEmail(String recipient, String currentUser,
-                                   String originUrl, League league) {
+                                   String originUrl, LeagueDocument league) {
         this.recipient = recipient;
         this.currentUser = currentUser;
         this.originUrl = originUrl;

@@ -11,43 +11,43 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface MatchRepository extends MongoRepository<Match, String> {
-    List<Match> findByLeagueId(String id, Sort sort);
+public interface MatchRepository extends MongoRepository<MatchDocument, String> {
+    List<MatchDocument> findByLeagueId(String id, Sort sort);
 
-    Page<Match> findByLeagueIdAndCompletedIsTrue(String id, Pageable pageable);
+    Page<MatchDocument> findByLeagueIdAndCompletedIsTrue(String id, Pageable pageable);
 
-    List<Match> findByLeagueIdAndCompletedIsFalse(String id, Sort sort);
+    List<MatchDocument> findByLeagueIdAndCompletedIsFalse(String id, Sort sort);
 
-    Match findByIdAndCompletedIsTrue(String id);
+    MatchDocument findByIdAndCompletedIsTrue(String id);
 
-    List<Match> findByCompletedIsFalse();
-
-    @Query(value = "{'$or': [{'playerOne.id': ?0}, {'playerTwo.id': ?0}]}")
-    List<Match> findByPlayerId(String playerId, Sort sort);
+    List<MatchDocument> findByCompletedIsFalse();
 
     @Query(value = "{'$or': [{'playerOne.id': ?0}, {'playerTwo.id': ?0}]}")
-    List<Match> findByPlayerId(String playerId);
+    List<MatchDocument> findByPlayerId(String playerId, Sort sort);
+
+    @Query(value = "{'$or': [{'playerOne.id': ?0}, {'playerTwo.id': ?0}]}")
+    List<MatchDocument> findByPlayerId(String playerId);
 
     @Query(value =
             "{'$and': [" +
                 "{'completed': true}," +
                 "{'$or': [{'playerOne.id': ?0}, {'playerTwo.id': ?0}]}" +
             "]}")
-    Page<Match> findCompletedByPlayerId(String playerId, Pageable pageable);
+    Page<MatchDocument> findCompletedByPlayerId(String playerId, Pageable pageable);
 
     @Query(value =
             "{'$and': [" +
                 "{'completed': true}," +
                 "{'$or': [{'playerOne.id': ?0}, {'playerTwo.id': ?0}]}" +
             "]}")
-    List<Match> findCompletedByPlayerId(String playerId);
+    List<MatchDocument> findCompletedByPlayerId(String playerId);
 
     @Query(value =
             "{'$and': [" +
                 "{'completed': true}," +
                 "{'$or': [{'playerOne.id': ?0}, {'playerTwo.id': ?0}]}" +
             "]}")
-    List<Match> findCompletedByPlayerId(String playerId, Sort sort);
+    List<MatchDocument> findCompletedByPlayerId(String playerId, Sort sort);
 
     @Query(value =
             "{'$and': [" +
@@ -55,7 +55,7 @@ public interface MatchRepository extends MongoRepository<Match, String> {
                 "{'$or': [{'playerOne.id': ?0}, {'playerTwo.id': ?0}]}," +
                 "{'date': {$gte: ?1}}" +
             "]}")
-    List<Match> findCompletedByPlayerIdAndDate(String playerId, Date from, Sort sort);
+    List<MatchDocument> findCompletedByPlayerIdAndDate(String playerId, Date from, Sort sort);
 
     @Query(value =
             "{'$and': [" +
@@ -63,14 +63,14 @@ public interface MatchRepository extends MongoRepository<Match, String> {
                 "{'$or': [{'playerOne.id': ?0}, {'playerTwo.id': ?0}]}," +
                 "{'date': {$gte: ?1, $lte: ?2}}" +
             "]}")
-    List<Match> findCompletedByPlayerIdAndDate(String playerId, Date from, Date to, Sort sort);
+    List<MatchDocument> findCompletedByPlayerIdAndDate(String playerId, Date from, Date to, Sort sort);
 
     @Query(value =
             "{'$and': [" +
                 "{'completed': false}," +
                 "{'$or': [{'playerOne.id': ?0}, {'playerTwo.id': ?0}]}" +
             "]}")
-    List<Match> findScheduledByPlayerId(String playerId, Sort sort);
+    List<MatchDocument> findScheduledByPlayerId(String playerId, Sort sort);
 
     @Query(value =
             "{'$and' : [" +
@@ -80,7 +80,7 @@ public interface MatchRepository extends MongoRepository<Match, String> {
                     "{'$and': [{'playerOne.id': ?1}, {'playerTwo.id': ?0}]}" +
                 "]}" +
             "]}")
-    List<Match> findCompletedByPlayerIds(String playerOneId, String playerTwoId);
+    List<MatchDocument> findCompletedByPlayerIds(String playerOneId, String playerTwoId);
 
     @Query(value =
             "{'$and' : [" +
@@ -90,7 +90,7 @@ public interface MatchRepository extends MongoRepository<Match, String> {
                     "{'$and': [{'playerOne.id': ?1}, {'playerTwo.id': ?0}]}" +
                 "]}" +
             "]}")
-    List<Match> findCompletedByPlayerIds(String playerOneId, String playerTwoId, Sort sort);
+    List<MatchDocument> findCompletedByPlayerIds(String playerOneId, String playerTwoId, Sort sort);
 
     @Query(value =
             "{'$and' : [" +
@@ -100,7 +100,7 @@ public interface MatchRepository extends MongoRepository<Match, String> {
                     "{'$and': [{'playerOne.id': ?1}, {'playerTwo.id': ?0}]}" +
                 "]}" +
             "]}")
-    Page<Match> findCompletedByPlayerIds(String playerOneId, String playerTwoId, Pageable pageable);
+    Page<MatchDocument> findCompletedByPlayerIds(String playerOneId, String playerTwoId, Pageable pageable);
 
     void deleteByLeagueId(String leagueId);
 }

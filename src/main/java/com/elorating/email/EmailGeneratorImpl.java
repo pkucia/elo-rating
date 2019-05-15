@@ -3,7 +3,7 @@ package com.elorating.email;
 import com.elorating.email.builder.CancelledMatchEmail;
 import com.elorating.email.builder.EditMatchEmail;
 import com.elorating.email.builder.ScheduledMatchEmail;
-import com.elorating.match.Match;
+import com.elorating.match.MatchDocument;
 import com.elorating.web.utils.DateUtils;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ import java.util.Set;
 @Component("emailGenerator")
 class EmailGeneratorImpl implements EmailGenerator {
 
-    public Set<EmailBuilder> generateEmails(Match match, String emailType, String originUrl) {
+    public Set<EmailBuilder> generateEmails(MatchDocument match, String emailType, String originUrl) {
         Set emailSet = null;
 
         if (emailType.equals(SCHEDULE_MATCH)) {
@@ -27,7 +27,7 @@ class EmailGeneratorImpl implements EmailGenerator {
         return emailSet;
     }
 
-    private Set<ScheduledMatchEmail> generateScheduleEmails(Match match, String originUrl) {
+    private Set<ScheduledMatchEmail> generateScheduleEmails(MatchDocument match, String originUrl) {
         Set emailSet = new HashSet();
 
         if (match.getPlayerOne().getUser() != null && match.getPlayerOne().getUser().getEmailsNotifications().isScheduledMatchNotification()) {
@@ -45,7 +45,7 @@ class EmailGeneratorImpl implements EmailGenerator {
         return emailSet;
     }
 
-    private Set<ScheduledMatchEmail> generateCancelEmails(Match match, String originUrl) {
+    private Set<ScheduledMatchEmail> generateCancelEmails(MatchDocument match, String originUrl) {
         Set emailSet = new HashSet();
 
         if (match.getPlayerOne().getUser() != null && match.getPlayerOne().getUser().getEmailsNotifications().isCancelledMatchNotification()) {
@@ -60,7 +60,7 @@ class EmailGeneratorImpl implements EmailGenerator {
         return emailSet;
     }
 
-    private Set<ScheduledMatchEmail> generateEditEmails(Match match, String originUrl) {
+    private Set<ScheduledMatchEmail> generateEditEmails(MatchDocument match, String originUrl) {
         Set emailSet = new HashSet();
 
         if (match.getPlayerOne().getUser() != null && match.getPlayerOne().getUser().getEmailsNotifications().isEditedMatchNotification()) {

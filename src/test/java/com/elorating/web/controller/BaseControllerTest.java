@@ -1,7 +1,7 @@
-package com.elorating.web;
+package com.elorating.web.controller;
 
 import com.elorating.CoreApplication;
-import com.elorating.league.League;
+import com.elorating.league.LeagueDocument;
 import com.elorating.league.LeagueService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.runner.RunWith;
@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
 @SpringBootTest(classes = CoreApplication.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
 @WebAppConfiguration
-public abstract class BaseControllerTest {
+abstract class BaseControllerTest {
 
     protected MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
@@ -28,7 +28,7 @@ public abstract class BaseControllerTest {
 
     protected MockMvc mockMvc;
 
-    protected League league;
+    protected LeagueDocument league;
 
     protected ObjectMapper objectMapper = new ObjectMapper();
 

@@ -1,11 +1,11 @@
 package com.elorating.match;
 
-import com.elorating.player.Player;
+import com.elorating.player.PlayerDocument;
 
 public class Elo {
-    private Match match;
+    private MatchDocument match;
 
-    public Elo(Match match) {
+    public Elo(MatchDocument match) {
         this.match = match;
         calculateRatings();
     }
@@ -15,7 +15,7 @@ public class Elo {
         this.match.updateRatingsWithDelta(delta);
     }
 
-    private int calculateRatingDelta(Player player, Player opponent) {
+    private int calculateRatingDelta(PlayerDocument player, PlayerDocument opponent) {
         double expectedScore = player.getExpectedScore(opponent);
         double kFactor = player.getKFactor();
         double scoreRatio = calculateScoreRatio();
@@ -34,7 +34,7 @@ public class Elo {
             return (11.0 + scoreDifference) / 8;
     }
 
-    private float getMatchResult(Player player, Player opponent) {
+    private float getMatchResult(PlayerDocument player, PlayerDocument opponent) {
         int playerScore = match.getScores().get(player.getId());
         int opponentScore = match.getScores().get(opponent.getId());
         if (playerScore > opponentScore)
@@ -53,7 +53,7 @@ public class Elo {
         return match.getRating(match.getPlayerTwo());
     }
 
-    public Match getMatch() {
+    public MatchDocument getMatch() {
         return match;
     }
 }

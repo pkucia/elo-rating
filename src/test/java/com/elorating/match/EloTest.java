@@ -1,8 +1,8 @@
 package com.elorating.algorithm;
 
 import com.elorating.match.Elo;
-import com.elorating.match.Match;
-import com.elorating.player.Player;
+import com.elorating.match.MatchDocument;
+import com.elorating.player.PlayerDocument;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -71,13 +71,13 @@ public class EloTest {
 
     @Before
     public void setUp() throws Exception {
-        Player playerOne = new Player("Player one");
+        PlayerDocument playerOne = new PlayerDocument("PlayerDocument one");
         playerOne.setId("1234");
         playerOne.setRating(playerOneRating);
-        Player playerTwo = new Player("Player two");
+        PlayerDocument playerTwo = new PlayerDocument("PlayerDocument two");
         playerTwo.setId("5678");
         playerTwo.setRating(playerTwoRating);
-        Match match = new Match(playerOne, playerTwo, playerOneScore, playerTwoScore);
+        MatchDocument match = new MatchDocument(playerOne, playerTwo, playerOneScore, playerTwoScore);
         elo = new Elo(match);
     }
 

@@ -1,8 +1,8 @@
 package com.elorating.web.utils;
 
-import com.elorating.league.League;
-import com.elorating.match.Match;
-import com.elorating.player.Player;
+import com.elorating.league.LeagueDocument;
+import com.elorating.match.MatchDocument;
+import com.elorating.player.PlayerDocument;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class MatchTestUtils {
 
-    public static Match generateMatch(League league, Player winner, Player loser, boolean completed) {
-        Match match = new Match(winner, loser, league);
+    public static MatchDocument generateMatch(LeagueDocument league, PlayerDocument winner, PlayerDocument loser, boolean completed) {
+        MatchDocument match = new MatchDocument(winner, loser, league);
         match.setScore(winner, 2);
         match.setScore(loser, 0);
         if (completed) {
@@ -23,10 +23,10 @@ public class MatchTestUtils {
         return match;
     }
 
-    public static List<Match> setupMatches(Player playerOne, Player playerTwo, League league, int amount) {
-        List<Match> matchList = new ArrayList<>();
+    public static List<MatchDocument> setupMatches(PlayerDocument playerOne, PlayerDocument playerTwo, LeagueDocument league, int amount) {
+        List<MatchDocument> matchList = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
-            Match match = new Match(playerOne, playerTwo, league);
+            MatchDocument match = new MatchDocument(playerOne, playerTwo, league);
             matchList.add(match);
         }
 

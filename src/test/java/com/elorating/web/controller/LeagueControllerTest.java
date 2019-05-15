@@ -1,6 +1,6 @@
-package com.elorating.web;
+package com.elorating.web.controller;
 
-import com.elorating.league.League;
+import com.elorating.league.LeagueDocument;
 import com.elorating.league.LeagueSettings;
 import org.junit.After;
 import org.junit.Before;
@@ -22,7 +22,7 @@ public class LeagueControllerTest extends BaseControllerTest {
     @Before
     public void setUp() {
         mockMvc = webAppContextSetup(webApplicationContext).build();
-        league = new League("testID1", "TestLeague");
+        league = new LeagueDocument("testID1", "TestLeague");
         LeagueSettings settings = new LeagueSettings();
         settings.setAllowDraws(true);
         settings.setMaxScore(8);
@@ -30,7 +30,7 @@ public class LeagueControllerTest extends BaseControllerTest {
         leagueService.save(league);
 
         for (int i = 0; i < RETIRES; i++) {
-            leagueService.save(new League(null, "League_" + i));
+            leagueService.save(new LeagueDocument(null, "League_" + i));
         }
     }
 
@@ -73,7 +73,7 @@ public class LeagueControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        String leagueJson = objectMapper.writeValueAsString(new League(null, "New league"));
+        String leagueJson = objectMapper.writeValueAsString(new LeagueDocument(null, "New league"));
         mockMvc.perform(post("/api/leagues")
                 .content(leagueJson)
                 .contentType(contentType))

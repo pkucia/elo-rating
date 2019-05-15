@@ -1,24 +1,24 @@
 package com.elorating.model;
 
-import com.elorating.match.Match;
-import com.elorating.player.Player;
+import com.elorating.match.MatchDocument;
+import com.elorating.player.PlayerDocument;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class MatchTest {
+public class MatchDocumentTest {
 
-    private Player playerOne;
-    private Player playerTwo;
-    private Match match;
+    private PlayerDocument playerOne;
+    private PlayerDocument playerTwo;
+    private MatchDocument match;
 
     @Before
     public void setUp() throws Exception {
-        playerOne = new Player("Player one");
+        playerOne = new PlayerDocument("PlayerDocument one");
         playerOne.setId("111");
-        playerTwo = new Player("Player two");
+        playerTwo = new PlayerDocument("PlayerDocument two");
         playerTwo.setId("222");
-        match = new Match(playerOne, playerTwo);
+        match = new MatchDocument(playerOne, playerTwo);
     }
 
     @Test

@@ -26,8 +26,8 @@ public class QueueListScheduler {
     @Scheduled(cron = "0 0 23 * * *")
     public void removeNotPlayedMatches() {
         logger.info("Remove not finished matches: start");
-        List<Match> matches = matchService.findByCompletedIsFalse();
-        for (Match match : matches) {
+        List<MatchDocument> matches = matchService.findByCompletedIsFalse();
+        for (MatchDocument match : matches) {
             matchService.delete(match.getId());
         }
         logger.info("Queues scheduler: stop");

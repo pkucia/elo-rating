@@ -1,7 +1,7 @@
 package com.elorating.web.utils;
 
-import com.elorating.league.League;
-import com.elorating.player.Player;
+import com.elorating.league.LeagueDocument;
+import com.elorating.player.PlayerDocument;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ import java.util.List;
  */
 public class PlayerTestUtils {
 
-    public static List<Player> generatePlayerList(int size, League league) {
-        List<Player> players = new ArrayList<>();
+    public static List<PlayerDocument> generatePlayerList(int size, LeagueDocument league) {
+        List<PlayerDocument> players = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             players.add(generatePlayer(String.valueOf(i), league));
         }
@@ -20,11 +20,11 @@ public class PlayerTestUtils {
         return players;
     }
 
-    public static Player generatePlayer(League league) {
+    public static PlayerDocument generatePlayer(LeagueDocument league) {
         return generatePlayer("1", league);
     }
 
-    public static Player generatePlayer(String id, League league)  {
-        return new Player("Player" + id, league);
+    public static PlayerDocument generatePlayer(String id, LeagueDocument league)  {
+        return new PlayerDocument("PlayerDocument" + id, league);
     }
 }

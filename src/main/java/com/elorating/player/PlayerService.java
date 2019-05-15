@@ -1,17 +1,17 @@
 package com.elorating.player;
 
 import com.elorating.common.CrudService;
-import com.elorating.match.Match;
+import com.elorating.match.MatchDocument;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
-public interface PlayerService extends CrudService<Player> {
+public interface PlayerService extends CrudService<PlayerDocument> {
 
-    List<Player> findByLeagueId(String id);
+    List<PlayerDocument> findByLeagueId(String id);
     Long getActivePlayersCountByLeague(String leaugeId);
-    List<Player> getRanking(String id, Sort sort);
-    List<Player> findByLeagueIdAndUsername(String leagueId, String username);
-    List<Player> findActiveByLeagueIdAndUsername(String leagueId, String username);
-    void restorePlayers(Match match);
+    List<PlayerDocument> getRanking(String id, Sort sort);
+    List<PlayerDocument> findByLeagueIdAndUsername(String leagueId, String username);
+    List<PlayerDocument> findActiveByLeagueIdAndUsername(String leagueId, String username);
+    void restorePlayers(MatchDocument match);
 }

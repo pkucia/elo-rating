@@ -7,15 +7,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends MongoRepository<User, String> {
-    User findByGoogleId(String googleId);
-    User findByEmail(String email);
-    List<User> findByNameLikeIgnoreCase(String name);
-    User findByInvitationToken(String token);
+public interface UserRepository extends MongoRepository<UserDocument, String> {
+    UserDocument findByGoogleId(String googleId);
+    UserDocument findByEmail(String email);
+    List<UserDocument> findByNameLikeIgnoreCase(String name);
+    UserDocument findByInvitationToken(String token);
     @Query(value = "" +
             "{" +
                 "'email': ?0, " +
                 "'invitationToken': {'$exists': true, '$ne': ''}" +
             "}")
-    User findByEmailAndInvitationTokenExists(String email);
+    UserDocument findByEmailAndInvitationTokenExists(String email);
 }

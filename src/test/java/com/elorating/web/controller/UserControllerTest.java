@@ -1,9 +1,9 @@
-package com.elorating.web;
+package com.elorating.web.controller;
 
-import com.elorating.league.League;
+import com.elorating.league.LeagueDocument;
 import com.elorating.email.EmailsNotifications;
-import com.elorating.user.User;
-import com.elorating.player.Player;
+import com.elorating.player.PlayerDocument;
+import com.elorating.user.UserDocument;
 import com.elorating.player.PlayerService;
 import com.elorating.user.UserService;
 import org.hamcrest.Matchers;
@@ -35,7 +35,7 @@ public class UserControllerTest extends BaseControllerTest {
     @Before
     public void setUp() throws Exception {
         mockMvc = webAppContextSetup(webApplicationContext).build();
-        this.league = leagueService.save(new League(null, "Test league"));
+        this.league = leagueService.save(new LeagueDocument(null, "Test league"));
     }
 
     @After
@@ -47,7 +47,7 @@ public class UserControllerTest extends BaseControllerTest {
 
     @Test
     public void testGet() throws Exception {
-        User user = userService.save(new User("Test user", "test@mail.com"));
+        UserDocument user = userService.save(new UserDocument("Test user", "test@mail.com"));
         String url = "/api/users/" + user.getId();
         mockMvc.perform(get(url)
                 .contentType(contentType))
@@ -59,7 +59,7 @@ public class UserControllerTest extends BaseControllerTest {
     @Ignore
     @Test
     public void testSignIn() throws Exception {
-        // TODO mock GoogleIdTokenVerifier to return fake User
+        // TODO mock GoogleIdTokenVerifier to return fake UserDocument
         String token = "example_token";
         mockMvc.perform(post("/users/sign-in")
                 .contentType(contentType)
@@ -70,23 +70,23 @@ public class UserControllerTest extends BaseControllerTest {
 
     @Test
     public void testAssignLeague() throws Exception {
-        User user = new User("Test user");
+        UserDocument user = new UserDocument("Test user");
         user.addLeague(league);
         userService.save(user);
-        League leagueToAssign = leagueService.save(new League(null, "To assign"));
+        LeagueDocument leagueToAssign = leagueService.save(new LeagueDocument(null, "To assign"));
         String url = "/api/leagues/" + leagueToAssign.getId() + "/users/" + user.getId() + "/assign-league/";
         mockMvc.perform(post(url)
                 .contentType(contentType))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.leagues", Matchers.hasSize(2)));
-        League updatedLeague = leagueService.get(leagueToAssign.getId()).get();
+        LeagueDocument updatedLeague = leagueService.get(leagueToAssign.getId()).get();
         Assert.assertTrue(updatedLeague.getUsers().size() == 1);
     }
 
     @Test
     public void testInviteNewUser() throws Exception {
-        User user = userService.save(new User("User who invite"));
-        User userToInvite = new User("User to invite", "t.morek@gmail.com");
+        UserDocument user = userService.save(new UserDocument("UserDocument who invite"));
+        UserDocument userToInvite = new UserDocument("UserDocument to invite", "t.morek@gmail.com");
         userToInvite.addLeague(league);
         String url = "/api/leagues/" + league.getId() + "/users/" + user.getId() + "/invite";
         mockMvc.perform(post(url)
@@ -103,8 +103,8 @@ public class UserControllerTest extends BaseControllerTest {
 
     @Test
     public void testInviteExistingUser() throws Exception {
-        User user = userService.save(new User("User who invite"));
-        User userToInvite = userService.save(new User("User to invite", "t.morek@gmail.com"));
+        UserDocument user = userService.save(new UserDocument("UserDocument who invite"));
+        UserDocument userToInvite = userService.save(new UserDocument("UserDocument to invite", "t.morek@gmail.com"));
         userToInvite.addLeague(league);
         String url = "/api/leagues/" + league.getId() + "/users/" + user.getId() + "/invite";
         mockMvc.perform(post(url)
@@ -115,16 +115,16 @@ public class UserControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.id", is(userToInvite.getId())))
                 .andExpect(jsonPath("$.email", is(userToInvite.getEmail())))
                 .andExpect(jsonPath("$.leagues[0].id", is(league.getId())));
-        League updatedLeague = leagueService.get(league.getId()).get();
+        LeagueDocument updatedLeague = leagueService.get(league.getId()).get();
         Assert.assertEquals(updatedLeague.getUsers().size(), 1);
     }
 
     @Ignore // Test failing when is run with other tests. WTF?
     @Test
     public void testInviteNewUserWithPlayer() throws Exception {
-        User user = userService.save(new User("User who invite"));
-        User userToInvite = new User("User to invite", "t.morek@gmail.com");
-        Player player = playerService.save(new Player("Player to connect", league));
+        UserDocument user = userService.save(new UserDocument("UserDocument who invite"));
+        UserDocument userToInvite = new UserDocument("UserDocument to invite", "t.morek@gmail.com");
+        PlayerDocument player = playerService.save(new PlayerDocument("PlayerDocument to connect", league));
         userToInvite.addPlayer(player);
         userToInvite.addLeague(league);
         String url = "/api/leagues/" + league.getId() + "/users/" + user.getId() + "/invite";
@@ -144,9 +144,9 @@ public class UserControllerTest extends BaseControllerTest {
     @Ignore // Test failing when is run with other tests. WTF?
     @Test
     public void testInviteExistingUserWithPlayer() throws Exception {
-        User user = userService.save(new User("User who invite"));
-        User userToInvite = userService.save(new User("User to invite", "t.morek@gmail.com"));
-        Player player = playerService.save(new Player("Player to connect", league));
+        UserDocument user = userService.save(new UserDocument("UserDocument who invite"));
+        UserDocument userToInvite = userService.save(new UserDocument("UserDocument to invite", "t.morek@gmail.com"));
+        PlayerDocument player = playerService.save(new PlayerDocument("PlayerDocument to connect", league));
         userToInvite.addPlayer(player);
         userToInvite.addLeague(league);
         String url = "/api/leagues/" + league.getId() + "/users/" + user.getId() + "/invite";
@@ -159,17 +159,17 @@ public class UserControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.email", is(userToInvite.getEmail())))
                 .andExpect(jsonPath("$.leagues[0].id", is(league.getId())))
                 .andExpect(jsonPath("$.players[0].id", is(player.getId())));
-        League updatedLeague = leagueService.get(league.getId()).get();
-        Player updatedPlayer = playerService.get(player.getId()).get();
+        LeagueDocument updatedLeague = leagueService.get(league.getId()).get();
+        PlayerDocument updatedPlayer = playerService.get(player.getId()).get();
         Assert.assertEquals(updatedLeague.getUsers().size(), 1);
         Assert.assertEquals(updatedPlayer.getUser().getId(), userToInvite.getId());
     }
 
     @Test
     public void testFindByUsername() throws Exception {
-        userService.save(new User("Name111"));
-        userService.save(new User("name112"));
-        userService.save(new User("name222"));
+        userService.save(new UserDocument("Name111"));
+        userService.save(new UserDocument("name112"));
+        userService.save(new UserDocument("name222"));
         String url = "/api/users/find-by-name" + "?name=name1";
         mockMvc.perform(get(url)
                 .contentType(contentType))
@@ -179,7 +179,7 @@ public class UserControllerTest extends BaseControllerTest {
 
     @Test
     public void testFindByUsernameEmptyResult() throws Exception {
-        userService.save(new User("user123"));
+        userService.save(new UserDocument("user123"));
         String url = "/api/users/find-by-name" + "?name=name";
         mockMvc.perform(get(url)
                 .contentType(contentType))
@@ -190,7 +190,7 @@ public class UserControllerTest extends BaseControllerTest {
     @Test
     public void testVerifySecurityToken() throws Exception {
         String token = UUID.randomUUID().toString();
-        User user = new User();
+        UserDocument user = new UserDocument();
         user.setInvitationToken(token);
         userService.save(user);
         String url = "/api/users/verify-security-token";
@@ -208,7 +208,7 @@ public class UserControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreatePlayer() throws Exception {
-        User user = userService.save(new User("Test user"));
+        UserDocument user = userService.save(new UserDocument("Test user"));
         String url = "/api/leagues/" + league.getId() + "/users/" + user.getId() + "/create-player";
         mockMvc.perform(post(url)
                 .contentType(contentType)
@@ -221,7 +221,7 @@ public class UserControllerTest extends BaseControllerTest {
     @Test
     public void test_userWithDefaultEmailNotificationsSetToFalse() throws Exception {
         String userName = "user";
-        User user = userService.save(new User(userName));
+        UserDocument user = userService.save(new UserDocument(userName));
         String url = "/api/users/find-by-name" + "?name=" + userName;
         mockMvc.perform(get(url)
                 .contentType(contentType))
@@ -234,7 +234,7 @@ public class UserControllerTest extends BaseControllerTest {
     @Test
     public void test_sendEmailNotificationsToUpdate_success() throws Exception {
         String userName = "user";
-        User user = userService.save(new User(userName));
+        UserDocument user = userService.save(new UserDocument(userName));
         String findUserUrl = "/api/users/find-by-name" + "?name=" + userName;
         mockMvc.perform(get(findUserUrl)
                 .contentType(contentType))
@@ -261,7 +261,7 @@ public class UserControllerTest extends BaseControllerTest {
     @Test
     public void test_updateUserTimezone() throws Exception {
         String userName = "user";
-        User user = userService.save(new User(userName));
+        UserDocument user = userService.save(new UserDocument(userName));
         String findUserUrl = "/api/users/find-by-name" + "?name=" + userName;
         mockMvc.perform(get(findUserUrl)
                 .contentType(contentType))

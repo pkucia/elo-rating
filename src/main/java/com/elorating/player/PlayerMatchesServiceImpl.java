@@ -1,7 +1,7 @@
 package com.elorating.player;
 
 import com.elorating.match.Elo;
-import com.elorating.match.Match;
+import com.elorating.match.MatchDocument;
 import com.elorating.match.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,67 +27,67 @@ class PlayerMatchesServiceImpl implements PlayerMatchesService {
     }
 
     @Override
-    public List<Match> findByPlayerId(String playerId, Sort sort) {
+    public List<MatchDocument> findByPlayerId(String playerId, Sort sort) {
         return matchRepository.findByPlayerId(playerId, sort);
     }
 
     @Override
-    public List<Match> findScheduledByPlayerId(String playerId, Sort sort) {
+    public List<MatchDocument> findScheduledByPlayerId(String playerId, Sort sort) {
         return matchRepository.findScheduledByPlayerId(playerId, sort);
     }
 
     @Override
-    public Page<Match> findCompletedByPlayerId(String playerId, PageRequest pageRequest) {
+    public Page<MatchDocument> findCompletedByPlayerId(String playerId, PageRequest pageRequest) {
         return matchRepository.findCompletedByPlayerId(playerId, pageRequest);
     }
 
     @Override
-    public List<Match> findCompletedByPlayerId(String playerId, Sort sort) {
+    public List<MatchDocument> findCompletedByPlayerId(String playerId, Sort sort) {
         return matchRepository.findCompletedByPlayerId(playerId, sort);
     }
 
     @Override
-    public List<Match> findCompletedByPlayerIds(String playerId, String opponentId, Sort sort) {
+    public List<MatchDocument> findCompletedByPlayerIds(String playerId, String opponentId, Sort sort) {
         return matchRepository.findCompletedByPlayerIds(playerId, opponentId, sort);
     }
 
     @Override
-    public Page<Match> findCompletedByPlayerIds(String playerId, String opponentId, PageRequest pageRequest) {
+    public Page<MatchDocument> findCompletedByPlayerIds(String playerId, String opponentId, PageRequest pageRequest) {
         return matchRepository.findCompletedByPlayerIds(playerId, opponentId, pageRequest);
     }
 
     @Override
-    public List<Match> findCompletedByPlayerIdAndDate(String playerId, Date from, Sort sort) {
+    public List<MatchDocument> findCompletedByPlayerIdAndDate(String playerId, Date from, Sort sort) {
         return matchRepository.findCompletedByPlayerIdAndDate(playerId, from, sort);
     }
 
     @Override
-    public List<Match> findCompletedByPlayerIdAndDate(String playerId, Date from, Date to, Sort sort) {
+    public List<MatchDocument> findCompletedByPlayerIdAndDate(String playerId, Date from, Date to, Sort sort) {
         return matchRepository.findCompletedByPlayerIdAndDate(playerId, from, to, sort);
     }
 
     @Override
-    public List<Match> getMatchForecast(String playerId, String opponentId) {
-        Player player = playerRepository.findById(playerId).orElseGet(Player::new);
-        Player opponent = playerRepository.findById(opponentId).orElseGet(Player::new);
+    public List<MatchDocument> getMatchForecast(String playerId, String opponentId) {
+        PlayerDocument player = playerRepository.findById(playerId).orElseGet(PlayerDocument::new);
+        PlayerDocument opponent = playerRepository.findById(opponentId).orElseGet(PlayerDocument::new);
         return generateForecastMatches(player, opponent);
     }
 
-    private List<Match> generateForecastMatches(Player player, Player opponent) {
+    private List<MatchDocument> generateForecastMatches(PlayerDocument player, PlayerDocument opponent) {
         int maxScore = player.getLeague().getSettings().getMaxScore();
         boolean allowDraws = player.getLeague().getSettings().isAllowDraws();
-        List<Match> matches = new ArrayList<>();
-        Elo elo = new Elo(new Match(player, opponent, maxScore, 0));
+        List<MatchDocument> matches = new ArrayList<>();
+        Elo elo = new Elo(new MatchDocument(player, opponent, maxScore, 0));
         matches.add(elo.getMatch());
-        elo = new Elo(new Match(player, opponent, maxScore, maxScore - 1));
+        elo = new Elo(new MatchDocument(player, opponent, maxScore, maxScore - 1));
         matches.add(elo.getMatch());
         if (allowDraws) {
-            elo = new Elo(new Match(player, opponent, 0, 0));
+            elo = new Elo(new MatchDocument(player, opponent, 0, 0));
             matches.add(elo.getMatch());
         }
-        elo = new Elo(new Match(player, opponent, maxScore - 1, maxScore));
+        elo = new Elo(new MatchDocument(player, opponent, maxScore - 1, maxScore));
         matches.add(elo.getMatch());
-        elo = new Elo(new Match(player, opponent, 0, maxScore));
+        elo = new Elo(new MatchDocument(player, opponent, 0, maxScore));
         matches.add(elo.getMatch());
         return matches;
     }

@@ -1,6 +1,6 @@
 package com.elorating.web.controller;
 
-import com.elorating.match.Match;
+import com.elorating.match.MatchDocument;
 import com.elorating.player.PlayerMatchesService;
 import com.elorating.web.utils.SortUtils;
 import io.swagger.annotations.Api;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@Api(value = "Player matches", description = "Player matches API")
+@Api(value = "PlayerDocument matches", description = "PlayerDocument matches API")
 public class PlayerMatchesController {
 
     @Autowired
@@ -28,10 +28,10 @@ public class PlayerMatchesController {
     @CrossOrigin
     @RequestMapping(value = "/players/{playerId}/matches", method = RequestMethod.GET)
     @ApiOperation(value = "Get player matches list", notes = "Return matches list by player id")
-    public ResponseEntity<List<Match>> getPlayerMatches(@PathVariable String playerId,
-                                                        @RequestParam(required = false) String sort) {
+    public ResponseEntity<List<MatchDocument>> getPlayerMatches(@PathVariable String playerId,
+                                                                @RequestParam(required = false) String sort) {
         Sort sortByDate = SortUtils.getSort(sort);
-        List<Match> matches = playerMatchesService.findByPlayerId(playerId, sortByDate);
+        List<MatchDocument> matches = playerMatchesService.findByPlayerId(playerId, sortByDate);
         return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 
@@ -39,13 +39,13 @@ public class PlayerMatchesController {
     @RequestMapping(value = "/players/{playerId}/completed-matches", method = RequestMethod.GET)
     @ApiOperation(value = "Get player completed matches page",
             notes = "Return page with player's completed matches by player id")
-    public ResponseEntity<Page<Match>> getPlayerCompletedMatches(@PathVariable String playerId,
-                                                                 @RequestParam int page,
-                                                                 @RequestParam(defaultValue = "10") int pageSize,
-                                                                 @RequestParam(required = false) String sort) {
+    public ResponseEntity<Page<MatchDocument>> getPlayerCompletedMatches(@PathVariable String playerId,
+                                                                         @RequestParam int page,
+                                                                         @RequestParam(defaultValue = "10") int pageSize,
+                                                                         @RequestParam(required = false) String sort) {
         Sort sortByDate = SortUtils.getSort(sort);
         PageRequest pageRequest = PageRequest.of(page, pageSize, sortByDate);
-        Page<Match> matches = playerMatchesService.findCompletedByPlayerId(playerId, pageRequest);
+        Page<MatchDocument> matches = playerMatchesService.findCompletedByPlayerId(playerId, pageRequest);
         return new ResponseEntity<>(matches, HttpStatus.OK);
 
     }
@@ -54,7 +54,7 @@ public class PlayerMatchesController {
     @RequestMapping(value = "/players/{playerId}/completed-matches/{opponentId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get player completed matches page filtered by opponent",
             notes = "Return page with player's completed matches by player id against opponent")
-    public ResponseEntity<Page<Match>> getPlayerCompletedMatchesAgainstOpponent(
+    public ResponseEntity<Page<MatchDocument>> getPlayerCompletedMatchesAgainstOpponent(
                                             @PathVariable String playerId,
                                             @PathVariable String opponentId,
                                             @RequestParam int page,
@@ -62,7 +62,7 @@ public class PlayerMatchesController {
                                             @RequestParam(required = false) String sort) {
         Sort sortByDate = SortUtils.getSort(sort);
         PageRequest pageRequest = PageRequest.of(page, pageSize, sortByDate);
-        Page<Match> matches = playerMatchesService.findCompletedByPlayerIds(playerId, opponentId, pageRequest);
+        Page<MatchDocument> matches = playerMatchesService.findCompletedByPlayerIds(playerId, opponentId, pageRequest);
         return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 
@@ -70,9 +70,9 @@ public class PlayerMatchesController {
     @RequestMapping(value = "/players/{playerId}/match-forecast/{opponentId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get match forecast against a specific opponent",
             notes = "Return list of matches with all possible scores")
-    public ResponseEntity<List<Match>> getMatchForecast(@PathVariable String playerId,
-                                                        @PathVariable String opponentId) {
-        List<Match> matches = playerMatchesService.getMatchForecast(playerId, opponentId);
+    public ResponseEntity<List<MatchDocument>> getMatchForecast(@PathVariable String playerId,
+                                                                @PathVariable String opponentId) {
+        List<MatchDocument> matches = playerMatchesService.getMatchForecast(playerId, opponentId);
         return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 
@@ -80,11 +80,11 @@ public class PlayerMatchesController {
     @RequestMapping(value = "/players/{playerId}/completed-matches-by-date", method = RequestMethod.GET)
     @ApiOperation(value = "Get player completed matches filtered by date",
             notes = "Return list with player's completed matches by player id and date")
-    public ResponseEntity<List<Match>> getPlayerCompletedMatchesByDate(
+    public ResponseEntity<List<MatchDocument>> getPlayerCompletedMatchesByDate(
             @PathVariable String playerId,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
-        List<Match> matches;
+        List<MatchDocument> matches;
         Sort sort = SortUtils.getSortAscending();
         if (from != null && to != null)
             matches = playerMatchesService.findCompletedByPlayerIdAndDate(playerId, from, to, sort);
@@ -100,20 +100,20 @@ public class PlayerMatchesController {
     @RequestMapping(value = "/players/{playerId}/scheduled-matches", method = RequestMethod.GET)
     @ApiOperation(value = "Get player scheduled matches page",
             notes = "Return page with player's scheduled matches by player id")
-    public ResponseEntity<List<Match>> getPlayerScheduledMatches(@PathVariable String playerId,
-                                                                 @RequestParam(required = false) String sort) {
+    public ResponseEntity<List<MatchDocument>> getPlayerScheduledMatches(@PathVariable String playerId,
+                                                                         @RequestParam(required = false) String sort) {
         Sort sortByDate = SortUtils.getSort(sort);
-        List<Match> matches = playerMatchesService.findScheduledByPlayerId(playerId, sortByDate);
+        List<MatchDocument> matches = playerMatchesService.findScheduledByPlayerId(playerId, sortByDate);
         return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/players/{playerId}/matches/{opponentId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get player matches list against a specific opponent", notes = "Return matches between two players")
-    public ResponseEntity<List<Match>> getPlayerMatchesAgainstOpponent(@PathVariable String playerId, @PathVariable String opponentId,
-                                                                       @RequestParam(required = false) String sort) {
+    public ResponseEntity<List<MatchDocument>> getPlayerMatchesAgainstOpponent(@PathVariable String playerId, @PathVariable String opponentId,
+                                                                               @RequestParam(required = false) String sort) {
         Sort sortByDate = SortUtils.getSort(sort);
-        List<Match> matches = playerMatchesService.findCompletedByPlayerIds(playerId, opponentId, sortByDate);
+        List<MatchDocument> matches = playerMatchesService.findCompletedByPlayerIds(playerId, opponentId, sortByDate);
         return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 }

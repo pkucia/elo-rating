@@ -1,15 +1,17 @@
 package com.elorating.player;
 
-import com.elorating.league.League;
-import com.elorating.user.User;
+import com.elorating.league.LeagueDocument;
+import com.elorating.user.UserDocument;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-public class Player {
+@Document(collection = "player")
+public class PlayerDocument {
 
     @Id
     protected String id;
@@ -18,35 +20,35 @@ public class Player {
     protected boolean active;
     @DBRef
     @JsonIgnoreProperties({"users", "players"})
-    protected League league;
+    protected LeagueDocument league;
     @DBRef
     @JsonIgnoreProperties({"googleId", "name", "givenName", "familyName", "invitationToken",
                 "leagues", "players", "emailsNotifications", "timezone"})
-    protected User user;
+    protected UserDocument user;
     private PlayerStats statistics;
 
-    public Player() {
+    public PlayerDocument() {
         this.rating = 1000;
         this.active = true;
         this.statistics = new PlayerStats();
     }
 
-    public Player(String username) {
+    public PlayerDocument(String username) {
         this();
         this.username = username;
     }
 
-    public Player(String username, League league) {
+    public PlayerDocument(String username, LeagueDocument league) {
         this(username);
         this.league = league;
     }
 
-    public Player(String username, League league, int rating) {
+    public PlayerDocument(String username, LeagueDocument league, int rating) {
         this(username, league);
         this.rating = rating;
     }
 
-    public double getExpectedScore(Player opponent) {
+    public double getExpectedScore(PlayerDocument opponent) {
         return 1 / (1 + Math.pow(10, ((double)(opponent.rating - rating)) / 400));
     }
 
@@ -85,11 +87,11 @@ public class Player {
         this.rating = rating;
     }
 
-    public League getLeague() {
+    public LeagueDocument getLeague() {
         return league;
     }
 
-    public void setLeague(League league) {
+    public void setLeague(LeagueDocument league) {
         this.league = league;
     }
 
@@ -101,11 +103,11 @@ public class Player {
         this.active = active;
     }
 
-    public User getUser() {
+    public UserDocument getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDocument user) {
         this.user = user;
     }
 

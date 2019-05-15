@@ -1,7 +1,7 @@
 package com.elorating.player;
 
 import com.elorating.common.AbstractCrudService;
-import com.elorating.match.Match;
+import com.elorating.match.MatchDocument;
 import com.elorating.match.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-class PlayerServiceImpl extends AbstractCrudService<Player, PlayerRepository> implements PlayerService {
+class PlayerServiceImpl extends AbstractCrudService<PlayerDocument, PlayerRepository> implements PlayerService {
 
     private final MatchRepository matchRepository;
 
@@ -27,7 +27,7 @@ class PlayerServiceImpl extends AbstractCrudService<Player, PlayerRepository> im
     }
 
     @Override
-    public List<Player> findByLeagueId(String id) {
+    public List<PlayerDocument> findByLeagueId(String id) {
         return repository.findByLeagueId(id);
     }
 
@@ -37,12 +37,12 @@ class PlayerServiceImpl extends AbstractCrudService<Player, PlayerRepository> im
     }
 
     @Override
-    public List<Player> getRanking(String id, Sort sort) {
+    public List<PlayerDocument> getRanking(String id, Sort sort) {
         return repository.getRanking(id, sort);
     }
 
     @Override
-    public List<Player> findByLeagueIdAndUsername(String leagueId, String username) {
+    public List<PlayerDocument> findByLeagueIdAndUsername(String leagueId, String username) {
         if (username.length() == 2) {
             String regex = buildInitialsRegex(username);
             System.out.println(regex);
@@ -54,7 +54,7 @@ class PlayerServiceImpl extends AbstractCrudService<Player, PlayerRepository> im
     }
 
     @Override
-    public List<Player> findActiveByLeagueIdAndUsername(String leagueId, String username) {
+    public List<PlayerDocument> findActiveByLeagueIdAndUsername(String leagueId, String username) {
         if (username.length() == 2) {
             String regex = buildInitialsRegex(username);
             return repository.findByLeagueIdAndActiveIsTrueAndUsernameRegex(leagueId, regex);
@@ -72,7 +72,7 @@ class PlayerServiceImpl extends AbstractCrudService<Player, PlayerRepository> im
         return regex.toString();
     }
     @Override
-    public void restorePlayers(Match match) {
+    public void restorePlayers(MatchDocument match) {
         get(match.getPlayerOne().getId()).ifPresent(playerOne -> {
             playerOne.restoreRating(match.getRatingDelta(), match.isDraw());
             Date playerLastMatchDate = getPlayerLastMatchDate(playerOne.getId());
@@ -91,8 +91,8 @@ class PlayerServiceImpl extends AbstractCrudService<Player, PlayerRepository> im
         String dateFieldToSort = "date";
         Sort sort = new Sort(Sort.Direction.DESC, dateFieldToSort);
         PageRequest pageRequest = PageRequest.of(0, 1, sort);
-        Page<Match> page = matchRepository.findCompletedByPlayerId(playerId, pageRequest);
-        Optional<Date> date = page.stream().findFirst().map(Match::getDate);
+        Page<MatchDocument> page = matchRepository.findCompletedByPlayerId(playerId, pageRequest);
+        Optional<Date> date = page.stream().findFirst().map(MatchDocument::getDate);
         return date.orElse(null);
     }
 }

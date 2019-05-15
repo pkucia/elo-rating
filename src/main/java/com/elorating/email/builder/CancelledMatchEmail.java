@@ -2,15 +2,15 @@ package com.elorating.email.builder;
 
 import com.elorating.email.EmailBuilder;
 import com.elorating.email.EmailStrings;
-import com.elorating.league.League;
+import com.elorating.league.LeagueDocument;
 import org.thymeleaf.context.Context;
 
 public class CancelledMatchEmail extends EmailBuilder {
 
     private String opponent;
-    private League league;
+    private LeagueDocument league;
 
-    public CancelledMatchEmail(String opponent, String recipient, String originUrl, League league) {
+    public CancelledMatchEmail(String opponent, String recipient, String originUrl, LeagueDocument league) {
         this.opponent = opponent;
         this.recipient = recipient;
         this.originUrl = originUrl;

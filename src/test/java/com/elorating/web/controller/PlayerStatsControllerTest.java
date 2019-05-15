@@ -1,8 +1,8 @@
-package com.elorating.web;
+package com.elorating.web.controller;
 
-import com.elorating.league.League;
-import com.elorating.match.Match;
-import com.elorating.player.Player;
+import com.elorating.league.LeagueDocument;
+import com.elorating.match.MatchDocument;
+import com.elorating.player.PlayerDocument;
 import com.elorating.player.PlayerService;
 import com.elorating.match.MatchService;
 import org.hamcrest.Matchers;
@@ -36,29 +36,29 @@ public class PlayerStatsControllerTest extends BaseControllerTest {
     @Autowired
     private MatchService matchService;
 
-    private Player player;
+    private PlayerDocument player;
 
-    private List<Player> opponents;
+    private List<PlayerDocument> opponents;
 
     @Before
     public void setUp() throws Exception {
         mockMvc = webAppContextSetup(webApplicationContext).build();
-        league = leagueService.save(new League(null, "League"));
-        player = playerService.save(new Player("Player", league));
+        league = leagueService.save(new LeagueDocument(null, "LeagueDocument"));
+        player = playerService.save(new PlayerDocument("PlayerDocument", league));
         opponents = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, - (RETRIES * 10 + 10));
         calendar.set(Calendar.HOUR, 8);
         for (int i = 0; i < RETRIES; i++) {
-            opponents.add(playerService.save(new Player("Opponent" + i, league)));
+            opponents.add(playerService.save(new PlayerDocument("Opponent" + i, league)));
             calendar.add(Calendar.DATE, 10);
             for (int j = 0; j < RETRIES; j++) {
                 calendar.add(Calendar.HOUR,1);
-                matchService.save(new Match(player, opponents.get(i), 2, 0, calendar.getTime()));
+                matchService.save(new MatchDocument(player, opponents.get(i), 2, 0, calendar.getTime()));
                 calendar.add(Calendar.HOUR,1);
-                matchService.save(new Match(player, opponents.get(i), 2, 2, calendar.getTime()));
+                matchService.save(new MatchDocument(player, opponents.get(i), 2, 2, calendar.getTime()));
                 calendar.add(Calendar.HOUR,1);
-                matchService.save(new Match(player, opponents.get(i), 0, 2, calendar.getTime()));
+                matchService.save(new MatchDocument(player, opponents.get(i), 0, 2, calendar.getTime()));
             }
         }
     }

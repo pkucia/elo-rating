@@ -1,7 +1,7 @@
 package com.elorating.web.controller;
 
-import com.elorating.league.League;
-import com.elorating.match.Match;
+import com.elorating.league.LeagueDocument;
+import com.elorating.match.MatchDocument;
 import com.elorating.player.PlayerService;
 import com.elorating.match.MatchService;
 import com.elorating.web.utils.SortUtils;
@@ -38,17 +38,17 @@ public class MatchController {
     @CrossOrigin
     @RequestMapping(value = "/matches/{matchId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get match", notes = "Return match by match id")
-    public ResponseEntity<Match> getMatch(@PathVariable("matchId") String matchId) {
-        Match match = matchService.get(matchId).orElse(null);
+    public ResponseEntity<MatchDocument> getMatch(@PathVariable("matchId") String matchId) {
+        MatchDocument match = matchService.get(matchId).orElse(null);
         return new ResponseEntity<>(match, HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/leagues/{leagueId}/matches", method = RequestMethod.GET)
     @ApiOperation(value = "Get matches list", notes = "Return all matches list by league id")
-    public ResponseEntity<List<Match>> get(@PathVariable String leagueId) {
+    public ResponseEntity<List<MatchDocument>> get(@PathVariable String leagueId) {
         Sort sortByDate = SortUtils.getSortDescending();
-        List<Match> matches = matchService.findByLeagueId(leagueId, sortByDate);
+        List<MatchDocument> matches = matchService.findByLeagueId(leagueId, sortByDate);
         return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 
@@ -56,13 +56,13 @@ public class MatchController {
     @RequestMapping(value = "/leagues/{leagueId}/completed-matches", method = RequestMethod.GET)
     @ApiOperation(value = "Get completed matches page",
                 notes = "Return page with completed matches")
-    public ResponseEntity<Page<Match>> getCompleted(@PathVariable String leagueId,
-                                                    @RequestParam int page,
-                                                    @RequestParam(defaultValue = "10") int pageSize,
-                                                    @RequestParam(required = false) String sort) {
+    public ResponseEntity<Page<MatchDocument>> getCompleted(@PathVariable String leagueId,
+                                                            @RequestParam int page,
+                                                            @RequestParam(defaultValue = "10") int pageSize,
+                                                            @RequestParam(required = false) String sort) {
         Sort sortByDate = SortUtils.getSort(sort);
         PageRequest pageRequest = PageRequest.of(page, pageSize, sortByDate);
-        Page<Match> matches = matchService.findByLeagueIdAndCompletedIsTrue(leagueId, pageRequest);
+        Page<MatchDocument> matches = matchService.findByLeagueIdAndCompletedIsTrue(leagueId, pageRequest);
         return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 
@@ -70,10 +70,10 @@ public class MatchController {
     @RequestMapping(value = "/leagues/{leagueId}/scheduled-matches", method = RequestMethod.GET)
     @ApiOperation(value = "Get scheduled matches page",
                 notes = "Return page with scheduled matches")
-    public ResponseEntity<List<Match>> getScheduled(@PathVariable String leagueId,
-                                                    @RequestParam(required = false) String sort) {
+    public ResponseEntity<List<MatchDocument>> getScheduled(@PathVariable String leagueId,
+                                                            @RequestParam(required = false) String sort) {
         Sort sortByDate = SortUtils.getSort(sort);
-        List<Match> matches = matchService.findByLeagueIdAndCompletedIsFalse(leagueId, sortByDate);
+        List<MatchDocument> matches = matchService.findByLeagueIdAndCompletedIsFalse(leagueId, sortByDate);
         return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 
@@ -81,13 +81,13 @@ public class MatchController {
     @RequestMapping(value = "/league/{leagueId}/reschedule-matches/{minutes}", method = RequestMethod.POST)
     @ApiOperation(value = "Reschedule scheduled matches by {minutes} defined in request",
         notes = "Return page with rescheduled matches")
-    public ResponseEntity<List<Match>> rescheduleMatches(HttpServletRequest request,
-                                                         @PathVariable String leagueId,
-                                                         @PathVariable int minutes,
-                                                         @RequestParam(required = false) String sort) {
+    public ResponseEntity<List<MatchDocument>> rescheduleMatches(HttpServletRequest request,
+                                                                 @PathVariable String leagueId,
+                                                                 @PathVariable int minutes,
+                                                                 @RequestParam(required = false) String sort) {
         Sort sortByDate = SortUtils.getSort(sort);
         String originUrl = getOriginUrl(request);
-        List<Match> matches = matchService.rescheduleMatchesInLeague(leagueId, minutes, sortByDate, originUrl);
+        List<MatchDocument> matches = matchService.rescheduleMatchesInLeague(leagueId, minutes, sortByDate, originUrl);
         return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 
@@ -95,8 +95,8 @@ public class MatchController {
     @CrossOrigin
     @RequestMapping(value = "/leagues/{leagueId}/matches", method = RequestMethod.POST)
     @ApiOperation(value = "Create match", notes = "Create new match")
-    public ResponseEntity<Match> save(HttpServletRequest request, @PathVariable String leagueId, @RequestBody Match match) {
-        match.setLeague(new League(leagueId));
+    public ResponseEntity<MatchDocument> save(HttpServletRequest request, @PathVariable String leagueId, @RequestBody MatchDocument match) {
+        match.setLeague(new LeagueDocument(leagueId));
         if (matchService.checkIfCompleted(match))
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         else if (match.isCompleted())
@@ -109,7 +109,7 @@ public class MatchController {
     @CrossOrigin
     @RequestMapping(value = "/leagues/{leagueId}/matches/{id}", method = RequestMethod.DELETE)
     @ApiOperation(value = "Delete match", notes = "Delete match by match id")
-    public ResponseEntity<Match> delete(HttpServletRequest request, @PathVariable String id) {
+    public ResponseEntity<MatchDocument> delete(HttpServletRequest request, @PathVariable String id) {
         matchService.deleteByIdWithNotification(id, getOriginUrl(request));
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -118,7 +118,7 @@ public class MatchController {
     @RequestMapping(value = "/leagues/{leagueId}/matches/{id}/revert", method = RequestMethod.POST)
     @ApiOperation(value = "Revert match",
                 notes = "Delete match and revert players rating to previous state")
-    public ResponseEntity<Match> revert(@PathVariable String id) {
+    public ResponseEntity<MatchDocument> revert(@PathVariable String id) {
         matchService.get(id).ifPresent(match -> {
             matchService.delete(match.getId());
             playerService.restorePlayers(match);

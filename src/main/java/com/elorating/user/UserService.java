@@ -1,25 +1,25 @@
 package com.elorating.user;
 
 import com.elorating.common.CrudService;
-import com.elorating.player.Player;
+import com.elorating.player.PlayerDocument;
 
 import java.util.List;
 import java.util.TimeZone;
 
-public interface UserService extends CrudService<User> {
+public interface UserService extends CrudService<UserDocument> {
 
-    User findByEmail(String email);
-    User findByInvitationToken(String token);
-    List<User> findByNameLikeIgnoreCase(String name);
-    User connectUserToLeagueAndPlayer(User user);
-    User connectUserToLeague(User user);
-    User connectUserToPlayer(User user);
-    User checkForPendingInvitation(User userFromGoogle);
-    User saveOrUpdateUser(User userFromGoogle);
-    User saveOrUpdateUser(User userFromGoogle, TimeZone timeZone);
-    User inviteNewUser(String currentUser, User userToInvite, String originUrl);
-    User inviteExistingUser(String currentUser, User requestUser, String originUrl);
-    User connectUserAndLeague(String userId, String leagueId);
-    User connectUserAndPlayer(String userId, String playerId);
-    Player createPlayerForUser(String userId, String leagueId);
+    UserDocument findByEmail(String email);
+    UserDocument findByInvitationToken(String token);
+    List<UserDocument> findByNameLikeIgnoreCase(String name);
+    UserDocument connectUserToLeagueAndPlayer(UserDocument user);
+    UserDocument connectUserToLeague(UserDocument user);
+    UserDocument connectUserToPlayer(UserDocument user);
+    UserDocument checkForPendingInvitation(UserDocument userFromGoogle);
+    UserDocument saveOrUpdateUser(UserDocument userFromGoogle);
+    UserDocument saveOrUpdateUser(UserDocument userFromGoogle, TimeZone timeZone);
+    UserDocument inviteNewUser(String currentUser, UserDocument userToInvite, String originUrl);
+    UserDocument inviteExistingUser(String currentUser, UserDocument requestUser, String originUrl);
+    UserDocument connectUserAndLeague(String userId, String leagueId);
+    UserDocument connectUserAndPlayer(String userId, String playerId);
+    PlayerDocument createPlayerForUser(String userId, String leagueId);
 }
