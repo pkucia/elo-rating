@@ -25,12 +25,12 @@ public class PlayerDocument {
     @JsonIgnoreProperties({"googleId", "name", "givenName", "familyName", "invitationToken",
                 "leagues", "players", "emailsNotifications", "timezone"})
     protected UserDocument user;
-    private PlayerStats statistics;
+    private Statistics statistics;
 
     public PlayerDocument() {
         this.rating = 1000;
         this.active = true;
-        this.statistics = new PlayerStats();
+        this.statistics = new Statistics();
     }
 
     public PlayerDocument(String username) {
@@ -111,7 +111,7 @@ public class PlayerDocument {
         this.user = user;
     }
 
-    public PlayerStats getStatistics() {
+    public Statistics getStatistics() {
         return statistics;
     }
 
@@ -137,5 +137,63 @@ public class PlayerDocument {
             statistics.setLost(--lost);
         }
         this.rating -= ratingDelta;
+    }
+
+    public class Statistics {
+
+        private int won;
+        private int lost;
+        private int draw;
+        private Date lastMatchDate;
+
+        public Statistics() {
+            this.won = 0;
+            this.lost = 0;
+            this.draw = 0;
+        }
+
+        public int getWon() {
+            return won;
+        }
+
+        public int getLost() {
+            return lost;
+        }
+
+        public int getDraw() {
+            return draw;
+        }
+
+        public void addWon() {
+            won++;
+        }
+
+        public void addLost() {
+            lost++;
+        }
+
+        public void setWon(int won) {
+            this.won = won;
+        }
+
+        public void setLost(int lost) {
+            this.lost = lost;
+        }
+
+        public void addDraw() {
+            draw++;
+        }
+
+        public void setDraw(int draw) {
+            this.draw = draw;
+        }
+
+        public Date getLastMatchDate() {
+            return lastMatchDate;
+        }
+
+        public void setLastMatchDate(Date lastMatchDate) {
+            this.lastMatchDate = lastMatchDate;
+        }
     }
 }

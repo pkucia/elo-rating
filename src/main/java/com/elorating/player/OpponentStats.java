@@ -6,16 +6,21 @@ import io.swagger.annotations.ApiModel;
 import java.util.List;
 
 @ApiModel("PlayerDocument's opponent statistics")
-public class OpponentStats extends PlayerStats {
+public class OpponentStats {
 
     private String id;
+    private int won;
+    private int lost;
+    private int draw;
     private PlayerDocument player;
     private PlayerDocument opponent;
     private int pointsGained;
     private int streak;
 
     public OpponentStats(PlayerDocument player, PlayerDocument opponent) {
-        super();
+        this.won = 0;
+        this.lost = 0;
+        this.draw = 0;
         this.player = player;
         this.opponent = opponent;
     }
@@ -42,6 +47,18 @@ public class OpponentStats extends PlayerStats {
             }
             pointsGained += match.getRatingDelta(player);
         }
+    }
+
+    public int getWon() {
+        return won;
+    }
+
+    public int getLost() {
+        return lost;
+    }
+
+    public int getDraw() {
+        return draw;
     }
 
     public int getPointsGained() {

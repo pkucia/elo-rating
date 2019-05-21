@@ -2,8 +2,12 @@ package com.elorating.player;
 
 import java.util.Date;
 
-public class PlayerMatchesStats extends PlayerStats {
+public class PlayerMatchesStats {
 
+    private int won;
+    private int lost;
+    private int draw;
+    private Date lastMatchDate;
     private int setsWon;
     private int setsLost;
     private int maxRating;
@@ -12,13 +16,59 @@ public class PlayerMatchesStats extends PlayerStats {
     private Date minRatingDate;
 
     public PlayerMatchesStats() {
-        super();
+        this.won = 0;
+        this.lost = 0;
+        this.draw = 0;
         this.setsWon = 0;
         this.setsLost = 0;
         this.maxRating = 1000;
         this.minRating = 1000;
         this.maxRatingDate = new Date();
         this.minRatingDate = new Date();
+    }
+
+    public int getWon() {
+        return won;
+    }
+
+    public int getLost() {
+        return lost;
+    }
+
+    public int getDraw() {
+        return draw;
+    }
+
+    public void addWon() {
+        won++;
+    }
+
+    public void addLost() {
+        lost++;
+    }
+
+    public void setWon(int won) {
+        this.won = won;
+    }
+
+    public void setLost(int lost) {
+        this.lost = lost;
+    }
+
+    public void addDraw() {
+        draw++;
+    }
+
+    public void setDraw(int draw) {
+        this.draw = draw;
+    }
+
+    public Date getLastMatchDate() {
+        return lastMatchDate;
+    }
+
+    public void setLastMatchDate(Date lastMatchDate) {
+        this.lastMatchDate = lastMatchDate;
     }
 
     public int getSetsWon() {

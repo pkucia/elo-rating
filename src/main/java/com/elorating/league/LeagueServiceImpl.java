@@ -3,7 +3,6 @@ package com.elorating.league;
 import com.elorating.common.AbstractCrudService;
 import com.elorating.match.MatchRepository;
 import com.elorating.player.PlayerRepository;
-import com.elorating.user.UserDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,11 +49,6 @@ class LeagueServiceImpl extends AbstractCrudService<LeagueDocument, LeagueReposi
     @Override
     public List<LeagueDocument> findUnassignedLeagues() {
         return repository.findByUsersNull();
-    }
-
-    @Override
-    public LeagueDocument findByIdAndUser(String leagueId, UserDocument user) {
-        return repository.findByIdAndUsers(leagueId, user);
     }
 
     @Override
