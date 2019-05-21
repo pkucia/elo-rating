@@ -27,7 +27,7 @@ public class UserDocument {
     private Date lastSignIn;
     private String invitationToken;
     @DBRef(lazy = true)
-    @JsonIgnoreProperties("users")
+    @JsonIgnoreProperties({"users", "settings"})
     private List<LeagueDocument> leagues;
     @DBRef(lazy = true)
     @JsonIgnoreProperties({"user"})

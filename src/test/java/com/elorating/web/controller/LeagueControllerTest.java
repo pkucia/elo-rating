@@ -1,7 +1,6 @@
 package com.elorating.web.controller;
 
 import com.elorating.league.LeagueDocument;
-import com.elorating.league.LeagueSettings;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,10 +22,8 @@ public class LeagueControllerTest extends BaseControllerTest {
     public void setUp() {
         mockMvc = webAppContextSetup(webApplicationContext).build();
         league = new LeagueDocument("testID1", "TestLeague");
-        LeagueSettings settings = new LeagueSettings();
-        settings.setAllowDraws(true);
-        settings.setMaxScore(8);
-        league.setSettings(settings);
+        league.getSettings().setAllowDraws(true);
+        league.getSettings().setMaxScore(8);
         leagueService.save(league);
 
         for (int i = 0; i < RETIRES; i++) {

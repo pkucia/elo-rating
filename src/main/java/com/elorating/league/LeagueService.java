@@ -11,5 +11,5 @@ public interface LeagueService extends CrudService<LeagueDocument> {
     LeagueDocument findByIdAndUser(String id, UserDocument user);
     LeagueDocument update(LeagueDocument league);
     List<LeagueDocument> findUnassignedLeagues();
-    LeagueSettings getSettings(String id);
+    LeagueDocument.Settings getSettings(String id);
 }

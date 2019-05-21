@@ -58,7 +58,7 @@ class LeagueServiceImpl extends AbstractCrudService<LeagueDocument, LeagueReposi
     }
 
     @Override
-    public LeagueSettings getSettings(String id) {
+    public LeagueDocument.Settings getSettings(String id) {
         return repository.findById(id)
                 .map(LeagueDocument::getSettings)
                 .orElse(null);

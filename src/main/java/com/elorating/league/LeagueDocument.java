@@ -21,10 +21,10 @@ public class LeagueDocument {
     @JsonIgnoreProperties({"leagues", "player"})
     private List<UserDocument> users;
 
-    private LeagueSettings settings;
+    private Settings settings;
 
     public LeagueDocument() {
-        this.settings = new LeagueSettings();
+        this.settings = new Settings();
     }
 
     public LeagueDocument(String id) {
@@ -67,11 +67,37 @@ public class LeagueDocument {
         return users != null && users.size() > 0;
     }
 
-    public LeagueSettings getSettings() {
+    public Settings getSettings() {
         return settings;
     }
 
-    public void setSettings(LeagueSettings settings) {
+    public void setSettings(Settings settings) {
         this.settings = settings;
+    }
+
+    public class Settings {
+        private int maxScore;
+        private boolean allowDraws;
+
+        public Settings() {
+            this.maxScore = 2;
+            this.allowDraws = false;
+        }
+
+        public int getMaxScore() {
+            return maxScore;
+        }
+
+        public void setMaxScore(int maxScore) {
+            this.maxScore = maxScore;
+        }
+
+        public boolean isAllowDraws() {
+            return allowDraws;
+        }
+
+        public void setAllowDraws(boolean allowDraws) {
+            this.allowDraws = allowDraws;
+        }
     }
 }

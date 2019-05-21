@@ -2,7 +2,6 @@ package com.elorating.web.controller;
 
 import com.elorating.league.LeagueDocument;
 import com.elorating.league.LeagueService;
-import com.elorating.league.LeagueSettings;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -46,8 +45,8 @@ public class LeagueController {
     @CrossOrigin
     @RequestMapping(value = "/leagues/{id}/settings", method = RequestMethod.GET)
     @ApiOperation(value = "Get league's settings", notes = "Return league's settings by league id")
-    public ResponseEntity<LeagueSettings> getSettings(@PathVariable String id) {
-        LeagueSettings settings = leagueService.getSettings(id);
+    public ResponseEntity<LeagueDocument.Settings> getSettings(@PathVariable String id) {
+        LeagueDocument.Settings settings = leagueService.getSettings(id);
         if (settings == null)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(settings, HttpStatus.OK);
