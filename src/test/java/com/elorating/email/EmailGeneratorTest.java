@@ -51,7 +51,9 @@ public class EmailGeneratorTest {
 
     @Test
     public void test_generateScheduleMatches_shouldReturnTwoEmails_success() throws Exception {
-        user.setEmailNotifications(setEmailNotifications(true, false, false));
+        user.getEmailsNotifications().setScheduledMatchNotification(true);
+        user.getEmailsNotifications().setEditedMatchNotification(false);
+        user.getEmailsNotifications().setCancelledMatchNotification(false);
         Set<EmailBuilder> scheduleMatchEmails = emailGenerator.generateEmails(match, emailGenerator.SCHEDULE_MATCH, originUrl);
 
         Assert.assertNotNull(scheduleMatchEmails);
@@ -63,7 +65,9 @@ public class EmailGeneratorTest {
 
     @Test
     public void test_generateEditMatches_shouldReturnTwoEmails_success() throws Exception {
-        user.setEmailNotifications(setEmailNotifications(false, true, false));
+        user.getEmailsNotifications().setScheduledMatchNotification(false);
+        user.getEmailsNotifications().setEditedMatchNotification(true);
+        user.getEmailsNotifications().setCancelledMatchNotification(false);
         Set<EmailBuilder> editMatchEmails = emailGenerator.generateEmails(match, emailGenerator.EDIT_MATCH, originUrl);
 
         Assert.assertNotNull(editMatchEmails);
@@ -75,7 +79,9 @@ public class EmailGeneratorTest {
 
     @Test
     public void test_generateCancelMatches_shouldReturnTwoEmails_success() throws Exception {
-        user.setEmailNotifications(setEmailNotifications(false, false, true));
+        user.getEmailsNotifications().setScheduledMatchNotification(false);
+        user.getEmailsNotifications().setEditedMatchNotification(false);
+        user.getEmailsNotifications().setCancelledMatchNotification(true);
         Set<EmailBuilder> cancelMatchEmails = emailGenerator.generateEmails(match, emailGenerator.CANCEL_MATCH, originUrl);
 
         Assert.assertNotNull(cancelMatchEmails);
@@ -87,7 +93,9 @@ public class EmailGeneratorTest {
 
     @Test
     public void test_emailNotifications_allEmailsSetToFalse_shouldNotGenerateEmails() throws Exception {
-        user.setEmailNotifications(new EmailsNotifications(false, false, false));
+        user.getEmailsNotifications().setScheduledMatchNotification(false);
+        user.getEmailsNotifications().setEditedMatchNotification(false);
+        user.getEmailsNotifications().setCancelledMatchNotification(false);
         Set<EmailBuilder> scheduleMatchEmails = emailGenerator.generateEmails(match, emailGenerator.SCHEDULE_MATCH, originUrl);
         Set<EmailBuilder> editMatchEmails = emailGenerator.generateEmails(match, emailGenerator.EDIT_MATCH, originUrl);
         Set<EmailBuilder> cancelMatchEmails = emailGenerator.generateEmails(match, emailGenerator.CANCEL_MATCH, originUrl);

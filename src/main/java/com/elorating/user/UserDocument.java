@@ -1,6 +1,5 @@
 package com.elorating.user;
 
-import com.elorating.email.EmailsNotifications;
 import com.elorating.league.LeagueDocument;
 import com.elorating.player.PlayerDocument;
 import com.elorating.web.utils.DateUtils;
@@ -35,9 +34,12 @@ public class UserDocument {
     private EmailsNotifications emailsNotifications;
     private String timezone;
 
-    public UserDocument() { }
+    public UserDocument() {
+        this.emailsNotifications = new EmailsNotifications();
+    }
 
     public UserDocument(String name) {
+        this();
         this.name = name;
     }
 
@@ -175,5 +177,42 @@ public class UserDocument {
     @JsonIgnore
     public String getTimezoneID() {
         return DateUtils.parseTimezoneStringToTimezoneID(this.timezone);
+    }
+
+    public class EmailsNotifications {
+
+        private boolean scheduledMatchNotification;
+        private boolean editedMatchNotification;
+        private boolean cancelledMatchNotification;
+
+        public EmailsNotifications() {
+            this.scheduledMatchNotification = false;
+            this.editedMatchNotification = false;
+            this.cancelledMatchNotification = false;
+        }
+
+        public boolean isScheduledMatchNotification() {
+            return scheduledMatchNotification;
+        }
+
+        public void setScheduledMatchNotification(boolean scheduledMatchNotification) {
+            this.scheduledMatchNotification = scheduledMatchNotification;
+        }
+
+        public boolean isEditedMatchNotification() {
+            return editedMatchNotification;
+        }
+
+        public void setEditedMatchNotification(boolean editedMatchNotification) {
+            this.editedMatchNotification = editedMatchNotification;
+        }
+
+        public boolean isCancelledMatchNotification() {
+            return cancelledMatchNotification;
+        }
+
+        public void setCancelledMatchNotification(boolean cancelledMatchNotification) {
+            this.cancelledMatchNotification = cancelledMatchNotification;
+        }
     }
 }

@@ -1,10 +1,10 @@
 package com.elorating.web.controller;
 
-import com.elorating.league.LeagueDocument;
 import com.elorating.email.EmailsNotifications;
+import com.elorating.league.LeagueDocument;
 import com.elorating.player.PlayerDocument;
-import com.elorating.user.UserDocument;
 import com.elorating.player.PlayerService;
+import com.elorating.user.UserDocument;
 import com.elorating.user.UserService;
 import org.hamcrest.Matchers;
 import org.junit.After;
