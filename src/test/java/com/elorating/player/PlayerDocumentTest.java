@@ -1,56 +1,134 @@
 package com.elorating.player;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
-import java.util.Arrays;
-import java.util.Collection;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-@RunWith(Parameterized.class)
 public class PlayerDocumentTest {
-    private int playerRating;
-    private int opponentRating;
-    private double playerExpected;
-    private PlayerDocument player;
-    private PlayerDocument opponent;
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> setParameters() {
-        return Arrays.asList(new Number[][] {
-                {1496, 1150, 0.879926688},
-                {532,326, 0.7659946708},
-                {1063, 1338, 0.1703671766},
-                {410, 320, 0.6266990817},
-                {2169, 2281, 0.3441794941},
-                {2122, 2228, 0.3520169867},
-                {2149, 2146, 0.5043172398},
-                {2260, 2287, 0.4612219079},
-                {2452, 2878, 0.0792739386},
-                {2836, 2924, 0.3759982414},
-                {2761, 2713, 0.5686413919},
-                {2523, 2631, 0.3493953721}
-        });
-    }
+    private static final String PLAYER_ID = "1234";
 
-    public PlayerDocumentTest(double playerRating, double opponentRating, double playerExpected) {
-        this.playerRating = (int) playerRating;
-        this.opponentRating = (int) opponentRating;
-        this.playerExpected = playerExpected;
-    }
+    private PlayerDocument objectUnderTests;
 
     @Before
-    public void setUp() throws Exception {
-        player = new PlayerDocument("PlayerDocument one");
-        player.setRating(playerRating);
-        opponent = new PlayerDocument("PlayerDocument two");
-        opponent.setRating(opponentRating);
+    public void setUp() {
+        objectUnderTests = new PlayerDocument();
+        objectUnderTests.setId(PLAYER_ID);
     }
 
     @Test
-    public void testGetEstimatedRate() throws Exception {
-        Assert.assertEquals(playerExpected, player.getExpectedScore(opponent), 0.000001);
+    public void shouldReturnCorrectExpectedScore() {
+        PlayerDocument opponent = new PlayerDocument();
+        opponent.setRating(1150);
+        objectUnderTests.setRating(1496);
+
+        double expectedScore = objectUnderTests.getExpectedScore(opponent);
+
+        assertEquals(0.879926688, expectedScore,0.000001);
+    }
+
+    @Test
+    public void shouldHaveDefaultFieldValuesAfterObjectCreation() {
+        assertTrue(objectUnderTests.isActive());
+        assertEquals(1000, objectUnderTests.getRating());
+        assertEquals(0, objectUnderTests.getStatistics().getDraw());
+        assertEquals(0, objectUnderTests.getStatistics().getWon());
+        assertEquals(0, objectUnderTests.getStatistics().getLost());
+        assertNull(objectUnderTests.getStatistics().getLastMatchDate());
+    }
+
+    @Test
+    public void shouldReturnCorrectKFactorBasedOnCurrentRating() {
+        objectUnderTests.setRating(1200);
+        assertEquals(32, objectUnderTests.getKFactor());
+
+        objectUnderTests.setRating(2100);
+        assertEquals(32, objectUnderTests.getKFactor());
+
+        objectUnderTests.setRating(2101);
+        assertEquals(24, objectUnderTests.getKFactor());
+
+        objectUnderTests.setRating(2400);
+        assertEquals(24, objectUnderTests.getKFactor());
+
+        objectUnderTests.setRating(2401);
+        assertEquals(16, objectUnderTests.getKFactor());
+    }
+
+    @Test
+    public void shouldUpdateWonStatistics() {
+        objectUnderTests.updateStatistics(PLAYER_ID);
+
+        PlayerDocument.Statistics statistics = objectUnderTests.getStatistics();
+        assertEquals(1, statistics.getWon());
+        assertEquals(0, statistics.getLost());
+        assertEquals(0, statistics.getDraw());
+    }
+
+    @Test
+    public void shouldUpdateLostStatistics() {
+        objectUnderTests.updateStatistics(PLAYER_ID);
+
+        PlayerDocument.Statistics statistics = objectUnderTests.getStatistics();
+        assertEquals(1, statistics.getWon());
+        assertEquals(0, statistics.getLost());
+        assertEquals(0, statistics.getDraw());
+    }
+
+    @Test
+    public void shouldUpdateDrawStatistics() {
+        objectUnderTests.updateStatistics(PLAYER_ID);
+
+        PlayerDocument.Statistics statistics = objectUnderTests.getStatistics();
+        assertEquals(1, statistics.getWon());
+        assertEquals(0, statistics.getLost());
+        assertEquals(0, statistics.getDraw());
+    }
+
+    @Test
+    public void shouldRestoreDrawMatchRating() {
+        prepareObjectForRestoreTests();
+
+        objectUnderTests.restoreRating(28, true);
+
+        assertEquals(1225, objectUnderTests.getRating());
+        assertEquals(1, objectUnderTests.getStatistics().getDraw());
+        assertEquals(2, objectUnderTests.getStatistics().getWon());
+        assertEquals(2, objectUnderTests.getStatistics().getLost());
+    }
+
+    @Test
+    public void shouldRestoreWonMatchRating() {
+        prepareObjectForRestoreTests();
+
+        objectUnderTests.restoreRating(28, false);
+
+        assertEquals(1225, objectUnderTests.getRating());
+        assertEquals(2, objectUnderTests.getStatistics().getDraw());
+        assertEquals(1, objectUnderTests.getStatistics().getWon());
+        assertEquals(2, objectUnderTests.getStatistics().getLost());
+    }
+
+    @Test
+    public void shouldRestoreLostMatchRating() {
+        prepareObjectForRestoreTests();
+
+        objectUnderTests.restoreRating(-28, false);
+
+        assertEquals(1281, objectUnderTests.getRating());
+        assertEquals(2, objectUnderTests.getStatistics().getDraw());
+        assertEquals(2, objectUnderTests.getStatistics().getWon());
+        assertEquals(1, objectUnderTests.getStatistics().getLost());
+    }
+
+
+    private void prepareObjectForRestoreTests() {
+        objectUnderTests.setRating(1253);
+        objectUnderTests.getStatistics().setDraw(2);
+        objectUnderTests.getStatistics().setLost(2);
+        objectUnderTests.getStatistics().setWon(2);
     }
 }

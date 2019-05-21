@@ -14,17 +14,17 @@ import java.util.Date;
 public class PlayerDocument {
 
     @Id
-    protected String id;
-    protected String username;
-    protected int rating;
-    protected boolean active;
+    private String id;
+    private String username;
+    private int rating;
+    private boolean active;
     @DBRef
     @JsonIgnoreProperties({"users", "players"})
-    protected LeagueDocument league;
+    private LeagueDocument league;
     @DBRef
     @JsonIgnoreProperties({"googleId", "name", "givenName", "familyName", "invitationToken",
-                "leagues", "players", "emailsNotifications", "timezone"})
-    protected UserDocument user;
+            "leagues", "players", "emailsNotifications", "timezone"})
+    private UserDocument user;
     private Statistics statistics;
 
     public PlayerDocument() {
@@ -54,9 +54,9 @@ public class PlayerDocument {
 
     @JsonIgnore
     public int getKFactor() {
-        if (rating < 2100) {
+        if (rating <= 2100) {
             return 32;
-        } else if (rating >= 2100 && rating <= 2400) {
+        } else if (rating <= 2400) {
             return 24;
         } else {
             return 16;
