@@ -1,7 +1,5 @@
-package com.elorating.algorithm;
+package com.elorating.match;
 
-import com.elorating.match.Elo;
-import com.elorating.match.MatchDocument;
 import com.elorating.player.PlayerDocument;
 import org.junit.After;
 import org.junit.Assert;

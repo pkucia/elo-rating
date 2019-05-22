@@ -1,6 +1,5 @@
-package com.elorating.model;
+package com.elorating.match;
 
-import com.elorating.match.MatchDocument;
 import com.elorating.player.PlayerDocument;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +12,7 @@ public class MatchDocumentTest {
     private MatchDocument match;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         playerOne = new PlayerDocument("PlayerDocument one");
         playerOne.setId("111");
         playerTwo = new PlayerDocument("PlayerDocument two");
@@ -22,26 +21,26 @@ public class MatchDocumentTest {
     }
 
     @Test
-    public void testIsCompletedIsFalse() throws Exception {
+    public void testIsCompletedIsFalse() {
         Assert.assertFalse(match.isCompleted());
     }
 
     @Test
-    public void testIsCompletedIsTrueFirst() throws Exception {
+    public void testIsCompletedIsTrueFirst() {
         match.setScore(playerOne, 0);
         match.setScore(playerTwo, 2);
         Assert.assertTrue(match.isCompleted());
     }
 
     @Test
-    public void testIsCompletedIsTrueSecond() throws Exception {
+    public void testIsCompletedIsTrueSecond() {
         match.setScore(playerOne, 2);
         match.setScore(playerTwo, 0);
         Assert.assertTrue(match.isCompleted());
     }
 
     @Test
-    public void testIsCompleteInvalidScore() throws Exception {
+    public void testIsCompleteInvalidScore() {
         match.setScore(playerOne, 3);
         Assert.assertFalse(match.isCompleted());
     }

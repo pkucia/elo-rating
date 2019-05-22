@@ -36,6 +36,8 @@ public class UserDocument {
 
     public UserDocument() {
         this.emailsNotifications = new EmailsNotifications();
+        this.leagues = new ArrayList<>();
+        this.players = new ArrayList<>();
     }
 
     public UserDocument(String name) {
@@ -156,9 +158,6 @@ public class UserDocument {
     }
 
     public EmailsNotifications getEmailsNotifications() {
-        if (emailsNotifications == null) {
-            return new EmailsNotifications();
-        }
         return emailsNotifications;
     }
 

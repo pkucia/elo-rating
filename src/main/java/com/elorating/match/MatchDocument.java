@@ -34,7 +34,7 @@ public class MatchDocument {
 
     private Date date;
 
-    private boolean completed = false;
+    private boolean completed;
 
     private int ratingDelta;
 
@@ -42,6 +42,7 @@ public class MatchDocument {
         this.date = new Date();
         this.scores = new HashMap<>();
         this.ratings = new HashMap<>();
+        this.completed = false;
     }
 
     public MatchDocument(PlayerDocument playerOne, PlayerDocument playerTwo) {
@@ -203,15 +204,5 @@ public class MatchDocument {
             return values.size() == 1;
         }
         return true;
-    }
-
-    public boolean isPlayerInMatch(String pid) {
-        if (playerOne != null && playerOne.getId().equals(pid)) {
-            return true;
-        }
-        if (playerTwo != null && playerTwo.getId().equals(pid)) {
-            return true;
-        }
-        return false;
     }
 }
