@@ -57,6 +57,10 @@ public class LeagueDocument {
         return users;
     }
 
+    public void setUsers(List<UserDocument> users) {
+        this.users = users;
+    }
+
     public void addUser(UserDocument user) {
         if (users == null)
             users = new ArrayList<>();
@@ -75,7 +79,7 @@ public class LeagueDocument {
         this.settings = settings;
     }
 
-    public class Settings {
+    public static class Settings {
         private int maxScore;
         private boolean allowDraws;
 

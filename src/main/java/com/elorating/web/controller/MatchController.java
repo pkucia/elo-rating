@@ -2,8 +2,9 @@ package com.elorating.web.controller;
 
 import com.elorating.league.LeagueDocument;
 import com.elorating.match.MatchDocument;
-import com.elorating.player.PlayerService;
+import com.elorating.match.MatchModel;
 import com.elorating.match.MatchService;
+import com.elorating.player.PlayerService;
 import com.elorating.web.utils.SortUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,8 +39,8 @@ public class MatchController {
     @CrossOrigin
     @RequestMapping(value = "/matches/{matchId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get match", notes = "Return match by match id")
-    public ResponseEntity<MatchDocument> getMatch(@PathVariable("matchId") String matchId) {
-        MatchDocument match = matchService.get(matchId).orElse(null);
+    public ResponseEntity<MatchModel> getMatch(@PathVariable("matchId") String matchId) {
+        MatchModel match = matchService.get(matchId).orElse(null);
         return new ResponseEntity<>(match, HttpStatus.OK);
     }
 
@@ -119,10 +120,10 @@ public class MatchController {
     @ApiOperation(value = "Revert match",
                 notes = "Delete match and revert players rating to previous state")
     public ResponseEntity<MatchDocument> revert(@PathVariable String id) {
-        matchService.get(id).ifPresent(match -> {
-            matchService.delete(match.getId());
-            playerService.restorePlayers(match);
-        });
+//        matchService.get(id).ifPresent(match -> {
+//            matchService.delete(match.getId());
+//            playerService.restorePlayers(match);
+//        }); fixme
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

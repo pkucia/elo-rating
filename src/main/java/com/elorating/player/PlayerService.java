@@ -6,7 +6,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
-public interface PlayerService extends CrudService<PlayerDocument> {
+public interface PlayerService extends CrudService<PlayerModel> {
 
     List<PlayerDocument> findByLeagueId(String id);
     Long getActivePlayersCountByLeague(String leaugeId);

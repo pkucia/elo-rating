@@ -15,15 +15,22 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-class PlayerServiceImpl extends AbstractCrudService<PlayerDocument, PlayerRepository> implements PlayerService {
+class PlayerServiceImpl extends AbstractCrudService<PlayerDocument, PlayerRepository, PlayerModel>
+                        implements PlayerService {
 
     private final MatchRepository matchRepository;
 
     @Autowired
     public PlayerServiceImpl(PlayerRepository playerRepository,
                              MatchRepository matchRepository) {
-        super(playerRepository);
+        super(playerRepository, PlayerDocument.class, PlayerModel.class);
         this.matchRepository = matchRepository;
+    }
+
+    @Override
+    public List<PlayerModel> getAll() {
+        // todo
+        return null;
     }
 
     @Override
@@ -63,7 +70,6 @@ class PlayerServiceImpl extends AbstractCrudService<PlayerDocument, PlayerReposi
         }
         return new ArrayList<>();
     }
-
     private String buildInitialsRegex(String username) {
         StringBuilder regex = new StringBuilder("(?i)^");
         String[] split = username.split("");
@@ -71,15 +77,16 @@ class PlayerServiceImpl extends AbstractCrudService<PlayerDocument, PlayerReposi
         regex.append(split[1]).append(".*");
         return regex.toString();
     }
+
     @Override
     public void restorePlayers(MatchDocument match) {
-        get(match.getPlayerOne().getId()).ifPresent(playerOne -> {
+        repository.findById(match.getPlayerOne().getId()).ifPresent(playerOne -> {
             playerOne.restoreRating(match.getRatingDelta(), match.isDraw());
             Date playerLastMatchDate = getPlayerLastMatchDate(playerOne.getId());
             playerOne.getStatistics().setLastMatchDate(playerLastMatchDate);
             repository.save(playerOne);
         });
-        get(match.getPlayerTwo().getId()).ifPresent(playerTwo -> {
+        repository.findById(match.getPlayerTwo().getId()).ifPresent(playerTwo -> {
             playerTwo.restoreRating(-match.getRatingDelta(), match.isDraw());
             Date playerLastMatchDate = getPlayerLastMatchDate(playerTwo.getId());
             playerTwo.getStatistics().setLastMatchDate(playerLastMatchDate);

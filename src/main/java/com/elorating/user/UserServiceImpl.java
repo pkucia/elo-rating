@@ -21,7 +21,8 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 @Service
-class UserServiceImpl extends AbstractCrudService<UserDocument, UserRepository> implements UserService {
+class UserServiceImpl extends AbstractCrudService<UserDocument, UserRepository, UserModel>
+                    implements UserService {
 
     private final LeagueRepository leagueRepository;
     private final PlayerRepository playerRepository;
@@ -30,10 +31,16 @@ class UserServiceImpl extends AbstractCrudService<UserDocument, UserRepository> 
     @Autowired
     public UserServiceImpl(LeagueRepository leagueRepository, UserRepository userRepository,
                            PlayerRepository playerRepository, EmailService emailService) {
-        super(userRepository);
+        super(userRepository, UserDocument.class, UserModel.class);
         this.leagueRepository = leagueRepository;
         this.playerRepository = playerRepository;
         this.emailService = emailService;
+    }
+
+    @Override
+    public List<UserModel> getAll() {
+        // todo
+        return null;
     }
 
     @Override

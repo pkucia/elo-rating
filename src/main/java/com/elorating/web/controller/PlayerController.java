@@ -1,10 +1,10 @@
 package com.elorating.web.controller;
 
-import com.elorating.league.LeagueDocument;
 import com.elorating.match.MatchDocument;
-import com.elorating.player.PlayerDocument;
-import com.elorating.player.PlayerService;
 import com.elorating.match.MatchService;
+import com.elorating.player.PlayerDocument;
+import com.elorating.player.PlayerModel;
+import com.elorating.player.PlayerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Pattern;
 import java.util.List;
@@ -42,8 +48,8 @@ public class PlayerController {
     @CrossOrigin
     @RequestMapping(value = "/players/{id}", method = RequestMethod.GET)
     @ApiOperation(value = "Get player", notes = "Return player by player id")
-    public ResponseEntity<PlayerDocument> getById(@PathVariable String id) {
-        PlayerDocument player = playerService.get(id).orElse(null);
+    public ResponseEntity<PlayerModel> getById(@PathVariable String id) {
+        PlayerModel player = playerService.get(id).orElse(null);
         return new ResponseEntity<>(player, HttpStatus.OK);
     }
 
@@ -67,8 +73,8 @@ public class PlayerController {
     @CrossOrigin
     @RequestMapping(value = "/leagues/{leagueId}/players", method = RequestMethod.POST)
     @ApiOperation(value = "Create player", notes = "Create player")
-    public ResponseEntity<PlayerDocument> create(@PathVariable String leagueId, @RequestBody PlayerDocument player) {
-        player.setLeague(new LeagueDocument(leagueId));
+    public ResponseEntity<PlayerModel> create(@PathVariable String leagueId, @RequestBody PlayerModel player) {
+//        player.setLeague(new LeagueDocument(leagueId)); fixme
         player = playerService.save(player);
         return new ResponseEntity<>(player, HttpStatus.OK);
     }
@@ -76,9 +82,9 @@ public class PlayerController {
     @CrossOrigin
     @RequestMapping(value = "/leagues/{leagueId}/players/{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Edit player", notes = "Edit player by player id")
-    public ResponseEntity<PlayerDocument> edit(@PathVariable String id, @RequestBody PlayerDocument player) {
+    public ResponseEntity<PlayerModel> edit(@PathVariable String id, @RequestBody PlayerModel player) {
         playerService.get(id).ifPresent(currentPlayer -> {
-            player.setLeague(currentPlayer.getLeague());
+//            player.setLeague(currentPlayer.getLeague()); // fixme
             playerService.save(player);
         });
         return new ResponseEntity<>(player, HttpStatus.OK);
@@ -100,7 +106,7 @@ public class PlayerController {
             match.removePlayerId(playerId);
         }
 
-        matchService.save(matches);
+//        matchService.save(matches); fixme
     }
 
     @CrossOrigin

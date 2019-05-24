@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-class MatchServiceImpl extends AbstractCrudService<MatchDocument, MatchRepository> implements MatchService {
+class MatchServiceImpl extends AbstractCrudService<MatchDocument, MatchRepository, MatchModel>
+                        implements MatchService {
 
     private final PlayerRepository playerRepository;
     private final EmailService emailService;
@@ -27,10 +28,16 @@ class MatchServiceImpl extends AbstractCrudService<MatchDocument, MatchRepositor
     @Autowired
     public MatchServiceImpl(MatchRepository matchRepository, PlayerRepository playerRepository,
                             EmailService emailService, EmailGenerator emailGenerator) {
-        super(matchRepository);
+        super(matchRepository, MatchDocument.class, MatchModel.class);
         this.playerRepository = playerRepository;
         this.emailService = emailService;
         this.emailGenerator = emailGenerator;
+    }
+
+    @Override
+    public List<MatchModel> getAll() {
+        // todo
+        return null;
     }
 
     @Override
@@ -44,7 +51,7 @@ class MatchServiceImpl extends AbstractCrudService<MatchDocument, MatchRepositor
     @Override
     public MatchDocument saveAndNotify(MatchDocument match, String originUrl) {
         boolean update = checkIfMatchToUpdate(match);
-        match = save(match);
+        match = repository.save(match);
         match = fulfillPlayersInfo(match);
         if (update) {
             this.emailService.sendEmails(emailGenerator.generateEmails(match, emailGenerator.EDIT_MATCH, originUrl));
@@ -75,7 +82,7 @@ class MatchServiceImpl extends AbstractCrudService<MatchDocument, MatchRepositor
         updatePlayer(match.getPlayerTwo(), match.getWinnerId());
         match.setCompleted();
         match.setDate(new Date());
-        return save(match);
+        return repository.save(match);
     }
 
     private void updatePlayer(PlayerDocument player, String winnerId) {

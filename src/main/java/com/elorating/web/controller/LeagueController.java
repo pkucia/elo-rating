@@ -1,6 +1,7 @@
 package com.elorating.web.controller;
 
 import com.elorating.league.LeagueDocument;
+import com.elorating.league.LeagueModel;
 import com.elorating.league.LeagueService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -37,8 +37,8 @@ public class LeagueController {
     @CrossOrigin
     @RequestMapping(value = "/leagues/{id}", method = RequestMethod.GET)
     @ApiOperation(value = "Get league", notes = "Return league by league id")
-    public ResponseEntity<LeagueDocument> get(@PathVariable String id) {
-        LeagueDocument league = leagueService.get(id).orElse(null);
+    public ResponseEntity<LeagueModel> get(@PathVariable String id) {
+        LeagueModel league = leagueService.get(id).orElse(null);
         return new ResponseEntity<>(league, HttpStatus.OK);
     }
 
@@ -55,8 +55,8 @@ public class LeagueController {
     @CrossOrigin
     @RequestMapping(value = "/leagues", method = RequestMethod.GET)
     @ApiOperation(value = "Get leagues list", notes = "Get all leagues list")
-    public ResponseEntity<ArrayList<LeagueDocument>> getAllLeagues() {
-        ArrayList<LeagueDocument> leaguesList = (ArrayList<LeagueDocument>) leagueService.getAll();
+    public ResponseEntity<List<LeagueModel>> getAllLeagues() {
+        List<LeagueModel> leaguesList = leagueService.getAll();
 
         if (leaguesList.isEmpty()) {
             logger.error("No leagues found");
@@ -78,8 +78,8 @@ public class LeagueController {
     @CrossOrigin
     @RequestMapping(value = "/leagues", method = RequestMethod.POST)
     @ApiOperation(value = "Create league", notes = "Create new league")
-    public ResponseEntity<LeagueDocument> create(@RequestBody LeagueDocument league) {
-        LeagueDocument createdLeague = leagueService.save(league);
+    public ResponseEntity<LeagueModel> create(@RequestBody LeagueModel league) {
+        LeagueModel createdLeague = leagueService.save(league);
         if (createdLeague == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }

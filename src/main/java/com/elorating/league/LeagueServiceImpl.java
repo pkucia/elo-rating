@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-class LeagueServiceImpl extends AbstractCrudService<LeagueDocument, LeagueRepository> implements LeagueService {
+class LeagueServiceImpl extends AbstractCrudService<LeagueDocument, LeagueRepository, LeagueModel>
+                        implements LeagueService {
 
     private MatchRepository matchRepository;
     private PlayerRepository playerRepository;
@@ -18,9 +19,16 @@ class LeagueServiceImpl extends AbstractCrudService<LeagueDocument, LeagueReposi
     public LeagueServiceImpl(LeagueRepository leagueRepository,
                              MatchRepository matchRepository,
                              PlayerRepository playerRepository) {
-        super(leagueRepository);
+        super(leagueRepository, LeagueDocument.class, LeagueModel.class);
         this.matchRepository = matchRepository;
         this.playerRepository = playerRepository;
+    }
+
+
+    @Override
+    public List<LeagueModel> getAll() {
+        // todo
+        return null;
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.elorating.email.EmailsNotifications;
 import com.elorating.player.PlayerDocument;
 import com.elorating.user.Invitation;
 import com.elorating.user.UserDocument;
+import com.elorating.user.UserModel;
 import com.elorating.user.UserService;
 import com.elorating.web.utils.DateUtils;
 import io.swagger.annotations.Api;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 import java.util.TimeZone;
 
 @RestController
@@ -42,8 +42,8 @@ public class UserController {
     @CrossOrigin
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
     @ApiOperation(value = "Get user", notes = "Get user by id")
-    public ResponseEntity<UserDocument> get(@PathVariable String id) {
-        UserDocument user = userService.get(id).orElse(null);
+    public ResponseEntity<UserModel> get(@PathVariable String id) {
+        UserModel user = userService.get(id).orElse(null);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -64,14 +64,14 @@ public class UserController {
     @CrossOrigin
     @RequestMapping(value = "/users/emails-notifications", method = RequestMethod.POST)
     @ApiOperation(value = "Update user", notes = "Update user settings")
-    public ResponseEntity<UserDocument> updateEmailNotifications(@RequestParam("user_id") String id, @RequestBody EmailsNotifications notifications) {
-        UserDocument userToUpdate = userService.get(id).map(user -> {
-            user.getEmailsNotifications().setScheduledMatchNotification(notifications.isScheduledMatchNotification());
-            user.getEmailsNotifications().setCancelledMatchNotification(notifications.isCancelledMatchNotification());
-            user.getEmailsNotifications().setEditedMatchNotification(notifications.isEditedMatchNotification());
-            return userService.saveOrUpdateUser(user);
-        }).orElse(null);
-        return new ResponseEntity<>(userToUpdate, HttpStatus.OK);
+    public ResponseEntity<UserModel> updateEmailNotifications(@RequestParam("user_id") String id, @RequestBody EmailsNotifications notifications) {
+        //        UserDocument userToUpdate = userService.get(id).map(user -> {
+//            user.getEmailsNotifications().setScheduledMatchNotification(notifications.isScheduledMatchNotification());
+//            user.getEmailsNotifications().setCancelledMatchNotification(notifications.isCancelledMatchNotification());
+//            user.getEmailsNotifications().setEditedMatchNotification(notifications.isEditedMatchNotification());
+//            return userService.saveOrUpdateUser(user);
+//        }).orElse(null); fixme
+        return new ResponseEntity<>(new UserModel(), HttpStatus.OK);
     }
 
     @CrossOrigin
@@ -94,7 +94,7 @@ public class UserController {
             userFromDB.update(userFromGoogle);
             userFromDB.setGoogleId(userFromGoogle.getGoogleId());
             userFromDB.clearInvitationToken();
-            userService.save(userFromDB);
+//            userService.save(userFromDB); fixme
             userService.connectUserToLeagueAndPlayer(userFromDB);
             return new ResponseEntity<>(userFromDB, HttpStatus.OK);
         }
@@ -135,15 +135,15 @@ public class UserController {
     public ResponseEntity<UserDocument> inviteUser(HttpServletRequest request,
                                                    @PathVariable String id,
                                                    @RequestBody UserDocument requestUser) {
-        Optional<UserDocument> currentUser = userService.get(id);
-        if (currentUser.isPresent()) {
-            String originUrl = request.getHeader("Origin");
-            UserDocument userFromDB = userService.findByEmail(requestUser.getEmail());
-            if (userFromDB == null)
-                requestUser = userService.inviteNewUser(currentUser.get().getName(), requestUser, originUrl);
-            else
-                requestUser = userService.inviteExistingUser(currentUser.get().getName(), requestUser, originUrl);
-        }
+//        Optional<UserDocument> currentUser = userService.get(id);
+//        if (currentUser.isPresent()) {
+//            String originUrl = request.getHeader("Origin");
+//            UserDocument userFromDB = userService.findByEmail(requestUser.getEmail());
+//            if (userFromDB == null)
+//                requestUser = userService.inviteNewUser(currentUser.get().getName(), requestUser, originUrl);
+//            else
+//                requestUser = userService.inviteExistingUser(currentUser.get().getName(), requestUser, originUrl);
+//        } // fixme
         return new ResponseEntity<>(requestUser, HttpStatus.OK);
     }
 
@@ -154,11 +154,11 @@ public class UserController {
         if (!DateUtils.validateTimezone(timezone)) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        UserDocument user = userService.get(id).map(userToUpdate -> {
-            userToUpdate.setTimezone(timezone);
-            return userService.saveOrUpdateUser(userToUpdate);
-
-        }).orElse(null);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+//        UserDocument user = userService.get(id).map(userToUpdate -> {
+//            userToUpdate.setTimezone(timezone);
+//            return userService.saveOrUpdateUser(userToUpdate);
+//
+//        }).orElse(null); // fixme
+        return new ResponseEntity<>(null, HttpStatus.OK); // fixme
     }
 }

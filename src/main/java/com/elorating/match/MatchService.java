@@ -7,7 +7,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
-public interface MatchService extends CrudService<MatchDocument> {
+public interface MatchService extends CrudService<MatchModel> {
 
     List<MatchDocument> saveAndNotify(List<MatchDocument> matches, String originUrl);
     MatchDocument saveAndNotify(MatchDocument match, String originUrl);

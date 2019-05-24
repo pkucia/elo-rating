@@ -4,7 +4,7 @@ import com.elorating.common.CrudService;
 
 import java.util.List;
 
-public interface LeagueService extends CrudService<LeagueDocument> {
+public interface LeagueService extends CrudService<LeagueModel> {
 
     List<LeagueDocument> findByName(String name);
     LeagueDocument update(LeagueDocument league);

@@ -6,7 +6,7 @@ import com.elorating.player.PlayerDocument;
 import java.util.List;
 import java.util.TimeZone;
 
-public interface UserService extends CrudService<UserDocument> {
+public interface UserService extends CrudService<UserModel> {
 
     UserDocument findByEmail(String email);
     UserDocument findByInvitationToken(String token);
