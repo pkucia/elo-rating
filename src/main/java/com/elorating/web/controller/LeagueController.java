@@ -43,16 +43,6 @@ public class LeagueController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/leagues/{id}/settings", method = RequestMethod.GET)
-    @ApiOperation(value = "Get league's settings", notes = "Return league's settings by league id")
-    public ResponseEntity<LeagueDocument.Settings> getSettings(@PathVariable String id) {
-        LeagueDocument.Settings settings = leagueService.getSettings(id);
-        if (settings == null)
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(settings, HttpStatus.OK);
-    }
-
-    @CrossOrigin
     @RequestMapping(value = "/leagues", method = RequestMethod.GET)
     @ApiOperation(value = "Get leagues list", notes = "Get all leagues list")
     public ResponseEntity<List<LeagueModel>> getAllLeagues() {
@@ -70,8 +60,8 @@ public class LeagueController {
     @RequestMapping(value = "/leagues/find-by-name", method = RequestMethod.GET)
     @ApiOperation(value = "Find leagues by name",
                 notes = "Return leagues list filtered by league name")
-    public ResponseEntity<List<LeagueDocument>> findByName(@RequestParam String name) {
-        List<LeagueDocument> leagues = leagueService.findByName(name);
+    public ResponseEntity<List<LeagueModel>> findByName(@RequestParam String name) {
+        List<LeagueModel> leagues = leagueService.findByName(name);
         return new ResponseEntity<>(leagues, HttpStatus.OK);
     }
 
@@ -90,7 +80,7 @@ public class LeagueController {
     @CrossOrigin
     @RequestMapping(value = "/leagues/{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update league", notes = "Update existing league details")
-    public ResponseEntity<LeagueDocument> update(@RequestBody LeagueDocument league) {
+    public ResponseEntity<LeagueModel> update(@RequestBody LeagueModel league) {
         leagueService.update(league);
         return new ResponseEntity<>(league, HttpStatus.OK);
     }

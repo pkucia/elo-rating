@@ -1,68 +1,58 @@
 package com.elorating.league;
 
 import com.elorating.common.AbstractCrudService;
-import com.elorating.match.MatchRepository;
-import com.elorating.player.PlayerRepository;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 @Service
 class LeagueServiceImpl extends AbstractCrudService<LeagueDocument, LeagueRepository, LeagueModel>
                         implements LeagueService {
 
-    private MatchRepository matchRepository;
-    private PlayerRepository playerRepository;
+    private final Type modelType;
 
     @Autowired
-    public LeagueServiceImpl(LeagueRepository leagueRepository,
-                             MatchRepository matchRepository,
-                             PlayerRepository playerRepository) {
+    public LeagueServiceImpl(LeagueRepository leagueRepository) {
         super(leagueRepository, LeagueDocument.class, LeagueModel.class);
-        this.matchRepository = matchRepository;
-        this.playerRepository = playerRepository;
+        modelType = new TypeToken<List<LeagueModel>>() {}.getType();
     }
-
 
     @Override
     public List<LeagueModel> getAll() {
-        // todo
-        return null;
+        List<LeagueDocument> leagueDocuments = repository.findAll();
+        return mapper.map(leagueDocuments, modelType);
     }
 
     @Override
-    public void delete(String id)
-    {
-        matchRepository.deleteByLeagueId(id);
-        playerRepository.deleteByLeagueId(id);
+    public void delete(String id) {
+        // matchRepository.deleteByLeagueId(id); fixme match service instead
+        // playerRepository.deleteByLeagueId(id); fixme player service instead
         repository.deleteById(id);
     }
 
     @Override
-    public List<LeagueDocument> findByName(String leagueName) {
-        return repository.findByNameLikeIgnoreCase(leagueName);
+    public List<LeagueModel> findByName(String leagueName) {
+        List<LeagueDocument> leagueDocuments = repository.findByNameLikeIgnoreCase(leagueName);
+        return mapper.map(leagueDocuments, modelType);
     }
 
     @Override
-    public LeagueDocument update(LeagueDocument league) {
-        return repository.findById(league.getId()).map(dbLeague -> {
-            dbLeague.setName(league.getName());
-            dbLeague.setSettings(league.getSettings());
-            repository.save(dbLeague);
-            return dbLeague;
+    public LeagueModel update(LeagueModel league) {
+        return repository.findById(league.getId()).map(leagueDocument -> {
+            leagueDocument.setName(league.getName());
+            leagueDocument.getSettings().setMaxScore(league.getSettingsMaxScore());
+            leagueDocument.getSettings().setAllowDraws(league.isSettingsAllowDraws());
+            repository.save(leagueDocument);
+            return mapper.map(leagueDocument, LeagueModel.class);
         }).orElse(null);
     }
 
     @Override
-    public List<LeagueDocument> findUnassignedLeagues() {
-        return repository.findByUsersNull();
-    }
-
-    @Override
-    public LeagueDocument.Settings getSettings(String id) {
-        return repository.findById(id)
-                .map(LeagueDocument::getSettings)
-                .orElse(null);
+    public List<LeagueModel> findUnassignedLeagues() {
+        List<LeagueDocument> leagueDocuments = repository.findByUsersNull();
+        return mapper.map(leagueDocuments, modelType);
     }
 }

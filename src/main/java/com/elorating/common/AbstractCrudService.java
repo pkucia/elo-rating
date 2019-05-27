@@ -26,17 +26,17 @@ public abstract class AbstractCrudService<D, R extends MongoRepository<D, String
         this.modelType = modelType;
     }
 
-    public Optional<M> get(String id) {
-        Optional<D> document = repository.findById(id);
-        return document.map(doc -> mapper.map(document.get(), modelType));
-    }
-
     /**
      * It's impossible to map generic lists List<D> to List<M>
      *     and this methods needs to be implemented in each service explicit
      * @return Models list
      */
     public abstract List<M> getAll();
+
+    public Optional<M> get(String id) {
+        Optional<D> document = repository.findById(id);
+        return document.map(doc -> mapper.map(document.get(), modelType));
+    }
 
     public M save(M model) {
         D document = mapper.map(model, documentType);

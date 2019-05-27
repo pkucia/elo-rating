@@ -68,7 +68,7 @@ public class LeagueDocument {
     }
 
     public boolean isAssigned() {
-        return users != null && users.size() > 0;
+        return users != null && !users.isEmpty();
     }
 
     public Settings getSettings() {

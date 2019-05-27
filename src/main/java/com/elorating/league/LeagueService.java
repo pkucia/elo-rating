@@ -6,8 +6,7 @@ import java.util.List;
 
 public interface LeagueService extends CrudService<LeagueModel> {
 
-    List<LeagueDocument> findByName(String name);
-    LeagueDocument update(LeagueDocument league);
-    List<LeagueDocument> findUnassignedLeagues();
-    LeagueDocument.Settings getSettings(String id);
+    List<LeagueModel> findByName(String name);
+    LeagueModel update(LeagueModel league);
+    List<LeagueModel> findUnassignedLeagues();
 }

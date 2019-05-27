@@ -18,8 +18,8 @@ public class LeagueScheduler {
 
     @Scheduled(cron = "0 5 23 * * *")
     public void removeUnassignedLeagues() {
-        List<LeagueDocument> leaguesToRemove = leagueService.findUnassignedLeagues();
-        for (LeagueDocument league : leaguesToRemove) {
+        List<LeagueModel> leaguesToRemove = leagueService.findUnassignedLeagues();
+        for (LeagueModel league : leaguesToRemove) {
             String leagueId = league.getId();
             leagueService.delete(leagueId);
         }
