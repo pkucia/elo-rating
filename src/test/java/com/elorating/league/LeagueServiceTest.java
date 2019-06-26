@@ -20,6 +20,9 @@ import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LeagueServiceTest {
@@ -34,8 +37,8 @@ public class LeagueServiceTest {
     public void setUp() {
         objectUnderTests = new LeagueServiceImpl(repository);
         leagueDocument = new LeagueDocument();
-        leagueDocument.setId("111");
-        leagueDocument.setName("League_1");
+        leagueDocument.setId("league111");
+        leagueDocument.setName("Test League");
         leagueDocument.getSettings().setAllowDraws(true);
         leagueDocument.getSettings().setMaxScore(5);
         UserDocument userDocument = new UserDocument();
@@ -43,11 +46,12 @@ public class LeagueServiceTest {
     }
 
     @Test
-    public void shouldGetLeague() {
-        given(repository.findById(eq("111"))).willReturn(Optional.of(leagueDocument));
+    public void shouldGetReturnLeagueModel() {
+        given(repository.findById(eq("league111"))).willReturn(Optional.of(leagueDocument));
 
-        Optional<LeagueModel> leagueOptional = objectUnderTests.get("111");
+        Optional<LeagueModel> leagueOptional = objectUnderTests.get("league111");
 
+        verify(repository, only()).findById(eq("league111"));
         leagueOptional.ifPresentOrElse(leagueModel -> {
             assertEquals(leagueDocument.getId(), leagueModel.getId());
             assertEquals(leagueDocument.getName(), leagueModel.getName());
@@ -59,22 +63,23 @@ public class LeagueServiceTest {
 
     @Test
     public void shouldGetLeagueReturnOptionalEmptyWhenLeagueDoesNotExist() {
-        given(repository.findById(eq("111"))).willReturn(Optional.empty());
+        given(repository.findById(eq("league111"))).willReturn(Optional.empty());
 
-        Optional<LeagueModel> leagueOptional = objectUnderTests.get("111");
+        Optional<LeagueModel> leagueOptional = objectUnderTests.get("league111");
 
+        verify(repository, only()).findById(eq("league111"));
         assertFalse(leagueOptional.isPresent());
     }
 
     @Test
-    public void shouldGetAllLeagues() {
+    public void shouldGetAllReturnModelsList() {
         given(repository.findAll()).willReturn(Collections.singletonList(leagueDocument));
 
         List<LeagueModel> leagues = objectUnderTests.getAll();
 
+        verify(repository, only()).findAll();
         assertEquals(1, leagues.size());
-        Optional<LeagueModel> leagueOptional = leagues.stream().findFirst();
-        leagueOptional.ifPresentOrElse(leagueModel -> {
+        leagues.stream().findFirst().ifPresentOrElse(leagueModel -> {
             assertEquals(leagueDocument.getId(), leagueModel.getId());
             assertEquals(leagueDocument.getName(), leagueModel.getName());
             assertEquals(leagueDocument.getUsers().size(), leagueModel.getUsers().size());
@@ -84,13 +89,23 @@ public class LeagueServiceTest {
     }
 
     @Test
-    public void shouldDeleteLeague() {
+    public void shouldGetAllReturnEmptyListWhenLeaguesDoesNotExist() {
+        given(repository.findAll()).willReturn(Collections.emptyList());
+
+        List<LeagueModel> leagues = objectUnderTests.getAll();
+
+        verify(repository, only()).findAll();
+        assertTrue(leagues.isEmpty());
+    }
+
+    @Test
+    public void shouldDeleteLeagueCallRepositoryMethodAndDeleteAlsoUsersPlayersAndMatches() {
         // todo
         fail();
     }
 
     @Test
-    public void shouldSaveLeague() {
+    public void shouldSaveLeagueCallRepositoryMethodAndReturnLeagueModel() {
         LeagueModel leagueModel = new LeagueModel();
         leagueModel.setName(leagueDocument.getName());
         leagueModel.setSettingsAllowDraws(leagueDocument.getSettings().isAllowDraws());
@@ -100,6 +115,7 @@ public class LeagueServiceTest {
 
         LeagueModel savedLeague = objectUnderTests.save(leagueModel);
 
+        verify(repository, only()).save(any(LeagueDocument.class));
         assertEquals(leagueDocument.getId(), savedLeague.getId());
         assertEquals(leagueDocument.getName(), savedLeague.getName());
         assertEquals(leagueDocument.getUsers().size(), savedLeague.getUsers().size());
@@ -108,12 +124,13 @@ public class LeagueServiceTest {
     }
 
     @Test
-    public void shouldFindByName() {
+    public void shouldFindByNameReturnModelsList() {
         given(repository.findByNameLikeIgnoreCase(eq(leagueDocument.getName())))
                 .willReturn(Collections.singletonList(leagueDocument));
 
         List<LeagueModel> leagueModels = objectUnderTests.findByName(leagueDocument.getName());
 
+        verify(repository, only()).findByNameLikeIgnoreCase(eq(leagueDocument.getName()));
         assertEquals(1, leagueModels.size());
         Optional<LeagueModel> leagueOptional = leagueModels.stream().findFirst();
         leagueOptional.ifPresentOrElse(leagueModel -> {
@@ -126,7 +143,7 @@ public class LeagueServiceTest {
     }
 
     @Test
-    public void shouldUpdate() {
+    public void shouldUpdateCallRepositoryMethodAndReturnUpdatedModel() {
         LeagueModel leagueModel = new LeagueModel();
         leagueModel.setId(leagueDocument.getId());
         leagueModel.setName("UpdatedName");
@@ -137,6 +154,8 @@ public class LeagueServiceTest {
 
         LeagueModel updatedModel = objectUnderTests.update(leagueModel);
 
+        verify(repository, times(1)).findById(eq(leagueModel.getId()));
+        verify(repository, times(1)).save(any(LeagueDocument.class));
         assertEquals(leagueModel.getId(), updatedModel.getId());
         assertEquals(leagueModel.getName(), updatedModel.getName());
         assertEquals(leagueModel.getSettingsMaxScore(), updatedModel.getSettingsMaxScore());
@@ -145,12 +164,13 @@ public class LeagueServiceTest {
     }
 
     @Test
-    public void shouldFindUnassignedLeagues() {
+    public void shouldFindUnassignedLeaguesReturnLeagueModels() {
         leagueDocument.setUsers(Collections.emptyList());
         given(repository.findByUsersNull()).willReturn(Collections.singletonList(leagueDocument));
 
         List<LeagueModel> leagueModels = objectUnderTests.findUnassignedLeagues();
 
+        verify(repository, only()).findByUsersNull();
         assertEquals(1, leagueModels.size());
         leagueModels.stream().findFirst().ifPresentOrElse(leagueModel -> {
             assertEquals(leagueDocument.getId(), leagueModel.getId());
